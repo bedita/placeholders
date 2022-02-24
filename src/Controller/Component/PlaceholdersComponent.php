@@ -14,8 +14,6 @@
 namespace BEdita\Placeholders\Controller\Component;
 
 use Cake\Controller\Component;
-use Cake\Controller\ComponentRegistry;
-use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 
 /**
