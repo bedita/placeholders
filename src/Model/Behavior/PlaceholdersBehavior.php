@@ -185,8 +185,13 @@ class PlaceholdersBehavior extends Behavior
             return [];
         }
 
+        $fields = [$table->aliasField($pk)];
+        if ($table->hasAssociation('ObjectTypes')) {
+            $fields = array_merge($fields, [$table->aliasField($table->getAssociation('ObjectTypes')->getForeignKey())]);
+        }
+
         return $table->find()
-            ->select($table->aliasField($pk))
+            ->select($fields)
             ->where(function (QueryExpression $exp) use ($table, $pk, $ids): QueryExpression {
                 return $exp->in($table->aliasField($pk), $ids);
             })
