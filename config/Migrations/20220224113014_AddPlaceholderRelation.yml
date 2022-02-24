@@ -11,4 +11,4 @@ create:
       left:
         - objects
       right:
-        - media
+        - objects
