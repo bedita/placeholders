@@ -30,6 +30,7 @@ class Plugin extends BasePlugin
     {
         parent::bootstrap($app);
 
-        EventManager::instance()->on(new BootstrapEventHandler());
+        EventManager::instance()
+            ->on(new BootstrapEventHandler());
     }
 }
