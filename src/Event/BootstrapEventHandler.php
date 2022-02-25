@@ -3,6 +3,7 @@
 namespace BEdita\Placeholders\Event;
 
 use BEdita\API\Controller\ObjectsController;
+use BEdita\Core\Model\Entity\ObjectType;
 use BEdita\Core\Model\Table\ObjectsBaseTable;
 use BEdita\Core\Model\Table\ObjectsTable;
 use Cake\Event\Event;
@@ -21,6 +22,7 @@ class BootstrapEventHandler implements EventListenerInterface
         return [
             'Model.initialize' => 'onModelInitialize',
             'Controller.initialize' => 'onControllerInitialize',
+            'ObjectType.getSchema' => 'onGetSchema',
         ];
     }
 
@@ -54,5 +56,31 @@ class BootstrapEventHandler implements EventListenerInterface
         }
 
         $controller->loadComponent('BEdita/Placeholders.Placeholders');
+    }
+
+    /**
+     * Modify object type schema by marking fields where placeholders are read from.
+     *
+     * @param \Cake\Event\Event $event Dispatched event.
+     * @param array $schema Automatically generated JSON schema.
+     * @param \BEdita\Core\Model\Entity\ObjectType $objectType Object type.
+     * @return array
+     */
+    public function onGetSchema(Event $event, array $schema, ObjectType $objectType): array
+    {
+        $table = $objectType->getTable();
+        if (!$table->hasBehavior('Placeholders')) {
+            return $schema;
+        }
+
+        $fields = $table->getBehavior('Placeholders')->getConfig('fields');
+        foreach ($fields as $field) {
+            if (!isset($schema['properties'][$field])) {
+                continue;
+            }
+            $schema['properties'][$field]['placeholders'] = true;
+        }
+
+        return $schema;
     }
 }
