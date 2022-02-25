@@ -8,12 +8,15 @@ use BEdita\Core\Model\Table\ObjectsBaseTable;
 use BEdita\Core\Model\Table\ObjectsTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
  * Attach placeholders behavior and component to relevant models and controllers, respectively, upon initialization.
  */
 class BootstrapEventHandler implements EventListenerInterface
 {
+    use LocatorAwareTrait;
+
     /**
      * @inheritDoc
      */
@@ -68,7 +71,7 @@ class BootstrapEventHandler implements EventListenerInterface
      */
     public function onGetSchema(Event $event, array $schema, ObjectType $objectType): array
     {
-        $table = $objectType->getTable();
+        $table = $this->getTableLocator()->get($objectType->table);
         if (!$table->hasBehavior('Placeholders')) {
             return $schema;
         }
