@@ -26,6 +26,8 @@ class Plugin extends BasePlugin
 {
     /**
      * {@inheritDoc}
+     *
+     * @codeCoverageIgnore
      */
     public function bootstrap(PluginApplicationInterface $app)
     {
