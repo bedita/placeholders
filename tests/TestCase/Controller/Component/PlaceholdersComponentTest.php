@@ -14,52 +14,122 @@
 namespace BEdita\Placeholders\Test\TestCase\Controller\Component;
 
 use BEdita\Placeholders\Controller\Component\PlaceholdersComponent;
-use Cake\Controller\ComponentRegistry;
+use Cake\Controller\Controller;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
+use Exception;
 
 /**
- * BEdita\Placeholders\Controller\Component\PlaceholdersComponent Test Case
+ * {@see \BEdita\Placeholders\Controller\Component\PlaceholdersComponent} Test Case
+ *
+ * @coversDefaultClass \BEdita\Placeholders\Controller\Component\PlaceholdersComponent
  */
 class PlaceholdersComponentTest extends TestCase
 {
     /**
-     * Test subject
+     * Controller instance.
      *
-     * @var \BEdita\Placeholders\Controller\Component\PlaceholdersComponent
+     * @var \Cake\Controller\Controller
      */
-    public $Placeholders;
+    protected Controller $controller;
 
     /**
-     * setUp method
-     *
-     * @return void
+     * @inheritDoc
      */
     public function setUp()
     {
         parent::setUp();
-        $registry = new ComponentRegistry();
-        $this->Placeholders = new PlaceholdersComponent($registry);
+
+        $this->controller = new Controller();
+        $this->controller->loadComponent(PlaceholdersComponent::class);
     }
 
     /**
-     * tearDown method
-     *
-     * @return void
+     * @inheritDoc
      */
     public function tearDown()
     {
         unset($this->Placeholders);
+        unset($this->controller);
 
         parent::tearDown();
     }
 
     /**
-     * Test initial setup
+     * Data provider for {@see \BEdita\Placeholders\Test\TestCase\Controller\Component\PlaceholdersComponentTest::testBeforeFilter()} test case.
      *
-     * @return void
+     * @return array[]
      */
-    public function testInitialization()
+    public function beforeFilterProvider(): array
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $request = new ServerRequest();
+
+        return [
+            'another action' => [
+                null,
+                $request
+                    ->withMethod('POST')
+                    ->withParam('action', 'index')
+                    ->withParam('relationship', 'placeholders'),
+            ],
+            'another relation' => [
+                null,
+                $request
+                    ->withMethod('POST')
+                    ->withParam('action', 'relationships')
+                    ->withParam('relationship', 'poster'),
+            ],
+            'allowed method' => [
+                null,
+                $request
+                    ->withMethod('GET')
+                    ->withParam('action', 'relationships')
+                    ->withParam('relationship', 'placeholder'),
+            ],
+            'POST' => [
+                new ForbiddenException(__d('placeholders', 'Placeholders can only be managed saving an object')),
+                $request
+                    ->withMethod('POST')
+                    ->withParam('action', 'relationships')
+                    ->withParam('relationship', 'placeholder'),
+            ],
+            'PATCH' => [
+                new ForbiddenException(__d('placeholders', 'Placeholders can only be managed saving an object')),
+                $request
+                    ->withMethod('PATCH')
+                    ->withParam('action', 'relationships')
+                    ->withParam('relationship', 'placeholder'),
+            ],
+            'DELETE' => [
+                new ForbiddenException(__d('placeholders', 'Placeholders can only be managed saving an object')),
+                $request
+                    ->withMethod('DELETE')
+                    ->withParam('action', 'relationships')
+                    ->withParam('relationship', 'placeholder'),
+            ],
+        ];
+    }
+
+    /**
+     * Test {@see PlaceholdersComponent::beforeFilter()}.
+     *
+     * @param \Exception|null $expected Expected exception.
+     * @param \Cake\Http\ServerRequest Request.
+     * @return void
+     *
+     * @covers ::beforeFilter()
+     * @dataProvider beforeFilterProvider()
+     */
+    public function testBeforeFilter(?Exception $expected, ServerRequest $request): void
+    {
+        if ($expected !== null) {
+            $this->expectExceptionObject($expected);
+        }
+
+        $this->controller->setRequest($request);
+        $actual = $this->controller->startupProcess();
+
+        static::assertNull($actual);
     }
 }

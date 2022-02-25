@@ -42,7 +42,7 @@ class PlaceholdersComponent extends Component
             return;
         }
         if (!in_array(mb_strtoupper($request->getMethod()), ['GET', 'HEAD', 'OPTIONS'])) {
-            throw new ForbiddenException();
+            throw new ForbiddenException(__d('placeholders', 'Placeholders can only be managed saving an object'));
         }
     }
 }
