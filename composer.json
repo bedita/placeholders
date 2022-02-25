@@ -4,6 +4,7 @@
     "type": "cakephp-plugin",
     "license": "MIT",
     "require": {
+        "php": ">= 7.4",
         "cakephp/cakephp": "^3.8",
         "bedita/core": "^4.2.0",
         "bedita/api": "^4.2.0"
