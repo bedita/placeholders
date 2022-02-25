@@ -27,7 +27,7 @@ class PlaceholdersComponent extends Component
      * @var array
      */
     protected $_defaultConfig = [
-        'relationNames' => ['placeholder', 'placeholded'],
+        'relations' => ['placeholder', 'placeholded'],
     ];
 
     /**
@@ -38,11 +38,11 @@ class PlaceholdersComponent extends Component
     public function beforeFilter(): void
     {
         $request = $this->getController()->getRequest();
-        if ($request->getParam('action') !== 'relationships' || !in_array($request->getParam('relationship'), (array)$this->getConfig('relationNames'))) {
+        if ($request->getParam('action') !== 'relationships' || !in_array($request->getParam('relationship'), (array)$this->getConfig('relations'))) {
             return;
         }
         if (!in_array(mb_strtoupper($request->getMethod()), ['GET', 'HEAD', 'OPTIONS'])) {
-            throw new ForbiddenException(__d('placeholders', 'Placeholders can only be managed saving an object'));
+            throw new ForbiddenException(__d('placeholders', 'Relationships of type {0} can only be managed saving an object', $request->getParam('relationship')));
         }
     }
 }

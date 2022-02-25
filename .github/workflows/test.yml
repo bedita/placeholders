@@ -14,7 +14,7 @@ on:
 jobs:
   cs:
     name: 'Check coding style'
-    runs-on: 'ubuntu-18.04'
+    runs-on: 'ubuntu-20.04'
 
     steps:
       - name: 'Checkout current revision'
@@ -52,7 +52,7 @@ jobs:
 
   stan:
     name: 'Static code analyzer'
-    runs-on: 'ubuntu-18.04'
+    runs-on: 'ubuntu-20.04'
     continue-on-error: true
 
     steps:
@@ -90,7 +90,7 @@ jobs:
   unit:
     name: 'Run unit tests'
     if: "!contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]')"
-    runs-on: 'ubuntu-18.04'
+    runs-on: 'ubuntu-20.04'
 
     strategy:
       fail-fast: false
@@ -98,7 +98,11 @@ jobs:
         php:
           - '7.4'
         db:
+          - '{"vendor": "SQLite", "pdo": "sqlite", "dsn": "sqlite:///:memory:", "image": "alpine:latest", "options": "--health-cmd \"/bin/true\" --health-interval 1s --health-timeout 2s --health-retries 5"}'
           - '{"vendor": "MySQL 8.0", "pdo": "mysql", "dsn": "mysql://bedita:bedita@127.0.0.1:3306/bedita", "image": "mysql:8.0", "options": "--health-cmd \"mysqladmin ping -h localhost\" --health-interval 10s --health-timeout 5s --health-retries 5"}'
+          - '{"vendor": "MySQL 5.7", "pdo": "mysql", "dsn": "mysql://bedita:bedita@127.0.0.1:3306/bedita?realVendor=mysql5.7", "image": "mysql:5.7", "options": "--health-cmd \"mysqladmin ping -h localhost\" --health-interval 10s --health-timeout 5s --health-retries 5"}'
+          - '{"vendor": "MariaDB", "pdo": "mysql", "dsn": "mysql://bedita:bedita@127.0.0.1:3306/bedita?realVendor=mariadb", "image": "mariadb:10", "options": "--health-cmd \"mysqladmin ping -h localhost\" --health-interval 10s --health-timeout 5s --health-retries 5"}'
+          - '{"vendor": "PostgreSQL", "pdo": "pgsql", "dsn": "postgres://bedita:bedita@127.0.0.1:5432/bedita", "image": "postgres:13", "options": "--health-cmd \"pg_isready\" --health-interval 10s --health-timeout 5s --health-retries 5"}'
 
     env:
       PHP_VERSION: '${{ matrix.php }}'
@@ -151,5 +155,20 @@ jobs:
       - name: 'Install dependencies with Composer'
         run: 'composer install --prefer-dist --no-interaction'
 
-      - name: 'Run PHPUnit'
-        run: 'vendor/bin/phpunit'
+      - name: 'Setup PCOV clobber'
+        run: 'composer require pcov/clobber && vendor/bin/pcov clobber'
+
+      - name: 'Run PHPUnit with coverage'
+        run: 'vendor/bin/phpunit --coverage-clover=clover.xml'
+
+      - name: 'Export coverage results'
+        uses: 'codecov/codecov-action@v1'
+        with:
+          file: './clover.xml'
+          env_vars: PHP_VERSION,DB_VENDOR
+
+      - name: 'Archive code coverage results'
+        uses: 'actions/upload-artifact@v2'
+        with:
+          name: 'PHP ${{ matrix.php }} with ${{ fromJson(matrix.db).vendor }}'
+          path: 'clover.xml'

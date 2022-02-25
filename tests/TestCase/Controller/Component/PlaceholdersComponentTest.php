@@ -50,14 +50,13 @@ class PlaceholdersComponentTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Placeholders);
         unset($this->controller);
 
         parent::tearDown();
     }
 
     /**
-     * Data provider for {@see \BEdita\Placeholders\Test\TestCase\Controller\Component\PlaceholdersComponentTest::testBeforeFilter()} test case.
+     * Data provider for {@see PlaceholdersComponentTest::testBeforeFilter()} test case.
      *
      * @return array[]
      */
@@ -88,21 +87,21 @@ class PlaceholdersComponentTest extends TestCase
                     ->withParam('relationship', 'placeholder'),
             ],
             'POST' => [
-                new ForbiddenException(__d('placeholders', 'Placeholders can only be managed saving an object')),
+                new ForbiddenException(__d('placeholders', 'Relationships of type placeholder can only be managed saving an object')),
                 $request
                     ->withMethod('POST')
                     ->withParam('action', 'relationships')
                     ->withParam('relationship', 'placeholder'),
             ],
             'PATCH' => [
-                new ForbiddenException(__d('placeholders', 'Placeholders can only be managed saving an object')),
+                new ForbiddenException(__d('placeholders', 'Relationships of type placeholder can only be managed saving an object')),
                 $request
                     ->withMethod('PATCH')
                     ->withParam('action', 'relationships')
                     ->withParam('relationship', 'placeholder'),
             ],
             'DELETE' => [
-                new ForbiddenException(__d('placeholders', 'Placeholders can only be managed saving an object')),
+                new ForbiddenException(__d('placeholders', 'Relationships of type placeholder can only be managed saving an object')),
                 $request
                     ->withMethod('DELETE')
                     ->withParam('action', 'relationships')

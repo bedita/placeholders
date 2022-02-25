@@ -7,10 +7,15 @@
  * installed as a dependency of an application.
  */
 
+use BEdita\Core\Filesystem\FilesystemRegistry;
 use BEdita\Placeholders\Test\TestApp\Application;
+use BEdita\Placeholders\Test\TestApp\Filesystem\Adapter\NullAdapter;
 use Cake\Cache\Cache;
+use Cake\Cache\Engine\ArrayEngine;
+use Cake\Cache\Engine\NullEngine;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
+use Cake\Log\Engine\ConsoleLog;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -52,44 +57,23 @@ Configure::write('App', [
 ]);
 
 Log::setConfig([
-    // 'queries' => [
-    //     'engine' => 'Cake\Log\Engine\FileLog',
-    //     'file' => 'sql',
-    //     'path' => LOGS,
-    // ],
-    // 'debug' => [
-    //     'engine' => 'Cake\Log\Engine\FileLog',
-    //     'levels' => ['notice', 'info', 'debug'],
-    //     'file' => 'debug',
-    //     'path' => LOGS,
-    // ],
+    'debug' => [
+        'engine' => ConsoleLog::class,
+        'levels' => ['notice', 'info', 'debug'],
+    ],
     'error' => [
-        'engine' => 'Cake\Log\Engine\FileLog',
+        'engine' => ConsoleLog::class,
         'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
-        'file' => 'error',
-        'path' => LOGS,
     ],
 ]);
 
 Cache::drop('_bedita_object_types_');
 Cache::drop('_bedita_core_');
 Cache::setConfig([
-    '_cake_core_' => [
-        'engine' => 'File',
-        'prefix' => 'cake_core_',
-        'serialize' => true,
-    ],
-    '_cake_model_' => [
-        'engine' => 'File',
-        'prefix' => 'cake_model_',
-        'serialize' => true,
-    ],
-    '_bedita_object_types_' => [
-        'className' => 'Null',
-    ],
-    '_bedita_core_' => [
-        'className' => 'Null',
-    ],
+    '_cake_core_' => ['engine' => ArrayEngine::class],
+    '_cake_model_' => ['engine' => ArrayEngine::class],
+    '_bedita_object_types_' => ['className' => NullEngine::class],
+    '_bedita_core_' => ['className' => NullEngine::class],
 ]);
 
 if (!getenv('db_dsn')) {
@@ -97,12 +81,17 @@ if (!getenv('db_dsn')) {
 }
 ConnectionManager::setConfig('test', [
     'url' => getenv('db_dsn'),
-    'log' => true,
+    // 'log' => true,
 ]);
 ConnectionManager::alias('test', 'default');
 
 Router::reload();
-Security::setSalt('');
+Security::setSalt('BEDITA');
+
+FilesystemRegistry::setConfig([
+    'default' => ['className' => NullAdapter::class],
+    'thumbnails' => ['className' => NullAdapter::class],
+]);
 
 $app = new Application(dirname(__DIR__) . '/config');
 $app->bootstrap();

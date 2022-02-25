@@ -15,12 +15,13 @@ namespace BEdita\Placeholders\Event;
 
 use BEdita\Core\Model\Entity\ObjectType;
 use Cake\Event\Event;
+use Cake\Event\EventListenerInterface;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
  * Modify generated JSON schema for object types to mark fields where placeholders are read from.
  */
-class JsonSchemaEventHandler implements \Cake\Event\EventListenerInterface
+class JsonSchemaEventHandler implements EventListenerInterface
 {
     use LocatorAwareTrait;
 
@@ -49,12 +50,27 @@ class JsonSchemaEventHandler implements \Cake\Event\EventListenerInterface
             return $schema;
         }
 
-        $fields = $table->getBehavior('Placeholders')->getConfig('fields');
+        $behavior = $table->getBehavior('Placeholders');
+
+        // Mark fields where placeholders are read from.
+        $fields = $behavior->getConfig('fields', []);
         foreach ($fields as $field) {
             if (!isset($schema['properties'][$field])) {
                 continue;
             }
             $schema['properties'][$field]['placeholders'] = true;
+        }
+
+        // Mark relevant relations as read only.
+        $relations = [$behavior->getConfig('relation')];
+        if ($table->hasBehavior('Placeholded')) {
+            array_push($relations, ...$table->getBehavior('Placeholded')->getConfig('relations', []));
+        }
+        foreach ($relations as $relName) {
+            if (!isset($schema['relations'][$relName])) {
+                continue;
+            }
+            $schema['relations'][$relName]['readonly'] = true;
         }
 
         return $schema;

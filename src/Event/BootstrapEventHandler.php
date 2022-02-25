@@ -26,29 +26,15 @@ class BootstrapEventHandler implements EventListenerInterface
 {
     /**
      * @inheritDoc
+     *
+     * @codeCoverageIgnore
      */
     public function implementedEvents(): array
     {
         return [
-            'Model.initialize' => 'onModelInitialize',
             'Controller.initialize' => 'onControllerInitialize',
+            'Model.initialize' => 'onModelInitialize',
         ];
-    }
-
-    /**
-     * Attach placeholders behavior on BEdita objects tables.
-     *
-     * @param \Cake\Event\Event $event Dispatched event.
-     * @return void
-     */
-    public function onModelInitialize(Event $event): void
-    {
-        $table = $event->getSubject();
-        if (!$table instanceof ObjectsTable && !$table instanceof ObjectsBaseTable) {
-            return;
-        }
-
-        $table->addBehavior('BEdita/Placeholders.Placeholders');
     }
 
     /**
@@ -65,5 +51,23 @@ class BootstrapEventHandler implements EventListenerInterface
         }
 
         $controller->loadComponent('BEdita/Placeholders.Placeholders');
+    }
+
+    /**
+     * Attach placeholders behavior on BEdita objects tables.
+     *
+     * @param \Cake\Event\Event $event Dispatched event.
+     * @return void
+     */
+    public function onModelInitialize(Event $event): void
+    {
+        $table = $event->getSubject();
+        if (!$table instanceof ObjectsTable && !$table instanceof ObjectsBaseTable) {
+            return;
+        }
+
+        $table
+            ->addBehavior('BEdita/Placeholders.Placeholders')
+            ->addBehavior('BEdita/Placeholders.Placeholded');
     }
 }
