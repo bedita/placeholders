@@ -1,48 +1,40 @@
 <?php
+/**
+ * BEdita, API-first content management framework
+ * Copyright 2022 Atlas Srl, Chialab Srl
+ *
+ * This file is part of BEdita: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * See LICENSE.LGPL or <http://gnu.org/licenses/lgpl-3.0.html> for more details.
+ */
 
 namespace BEdita\Placeholders\Event;
 
 use BEdita\API\Controller\ObjectsController;
-use BEdita\Core\Model\Entity\ObjectType;
 use BEdita\Core\Model\Table\ObjectsBaseTable;
 use BEdita\Core\Model\Table\ObjectsTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
  * Attach placeholders behavior and component to relevant models and controllers, respectively, upon initialization.
  */
 class BootstrapEventHandler implements EventListenerInterface
 {
-    use LocatorAwareTrait;
-
     /**
      * @inheritDoc
+     *
+     * @codeCoverageIgnore
      */
     public function implementedEvents(): array
     {
         return [
-            'Model.initialize' => 'onModelInitialize',
             'Controller.initialize' => 'onControllerInitialize',
-            'ObjectType.getSchema' => 'onGetSchema',
+            'Model.initialize' => 'onModelInitialize',
         ];
-    }
-
-    /**
-     * Attach placeholders behavior on BEdita objects tables.
-     *
-     * @param \Cake\Event\Event $event Dispatched event.
-     * @return void
-     */
-    public function onModelInitialize(Event $event): void
-    {
-        $table = $event->getSubject();
-        if (!$table instanceof ObjectsTable && !$table instanceof ObjectsBaseTable) {
-            return;
-        }
-
-        $table->addBehavior('BEdita/Placeholders.Placeholders');
     }
 
     /**
@@ -62,28 +54,20 @@ class BootstrapEventHandler implements EventListenerInterface
     }
 
     /**
-     * Modify object type schema by marking fields where placeholders are read from.
+     * Attach placeholders behavior on BEdita objects tables.
      *
      * @param \Cake\Event\Event $event Dispatched event.
-     * @param array $schema Automatically generated JSON schema.
-     * @param \BEdita\Core\Model\Entity\ObjectType $objectType Object type.
-     * @return array
+     * @return void
      */
-    public function onGetSchema(Event $event, array $schema, ObjectType $objectType): array
+    public function onModelInitialize(Event $event): void
     {
-        $table = $this->getTableLocator()->get($objectType->table);
-        if (!$table->hasBehavior('Placeholders')) {
-            return $schema;
+        $table = $event->getSubject();
+        if (!$table instanceof ObjectsTable && !$table instanceof ObjectsBaseTable) {
+            return;
         }
 
-        $fields = $table->getBehavior('Placeholders')->getConfig('fields');
-        foreach ($fields as $field) {
-            if (!isset($schema['properties'][$field])) {
-                continue;
-            }
-            $schema['properties'][$field]['placeholders'] = true;
-        }
-
-        return $schema;
+        $table
+            ->addBehavior('BEdita/Placeholders.Placeholders')
+            ->addBehavior('BEdita/Placeholders.Placeholded');
     }
 }

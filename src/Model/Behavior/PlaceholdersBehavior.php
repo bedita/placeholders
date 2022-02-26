@@ -20,26 +20,23 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Association;
 use Cake\ORM\Behavior;
-use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use InvalidArgumentException;
 use RuntimeException;
 
 /**
  * Placeholders behavior
- *
- * @since 4.3.0
  */
 class PlaceholdersBehavior extends Behavior
 {
-    use LocatorAwareTrait;
+    use GetAssociationTrait;
 
     /**
      * The default regex to use to interpolate placeholders data.
      *
      * @var string
      */
-    const REGEX = '/<!--\s*BE-PLACEHOLDER\.(?P<id>\d+)(?:\.(?P<params>[A-Za-z0-9+=-]+))?\s*-->/';
+    protected const REGEX = '/<!--\s*BE-PLACEHOLDER\.(?P<id>\d+)(?:\.(?P<params>[A-Za-z0-9+=-]+))?\s*-->/';
 
     /**
      * Default configurations. Available configurations include:
@@ -58,13 +55,6 @@ class PlaceholdersBehavior extends Behavior
         'fields' => ['description', 'body'],
         'extract' => null,
     ];
-
-    /**
-     * Relation instance.
-     *
-     * @var \BEdita\Core\Model\Entity\Relation|null
-     */
-    protected $relation = null;
 
     /**
      * Extract placeholders from an entity.
@@ -110,35 +100,6 @@ class PlaceholdersBehavior extends Behavior
     }
 
     /**
-     * Get Association.
-     *
-     * @param bool $direct `true` for direct association, or `false` to use inverse.
-     * @return \Cake\ORM\Association
-     */
-    protected function getAssociation(bool $direct): Association
-    {
-        $relName = $this->getConfigOrFail('relation');
-        if (!isset($this->relation)) {
-            /** @var \BEdita\Core\Model\Table\RelationsTable $Relations */
-            $Relations = $this->getTableLocator()->get('Relations');
-
-            $this->relation = $Relations->get($relName);
-        }
-
-        $assoc = $this->relation->alias;
-        if ((!$direct && $this->relation->name === $relName) || ($direct && $this->relation->inverse_name === $relName)) {
-            $assoc = $this->relation->inverse_alias;
-        }
-
-        $association = $this->getTable()->getAssociation($assoc);
-        if (!in_array($association->type(), [Association::ONE_TO_MANY, Association::MANY_TO_MANY])) {
-            throw new InvalidArgumentException(sprintf('Invalid association type "%s"', get_class($association)));
-        }
-
-        return $association;
-    }
-
-    /**
      * Add associations using placeholder relation.
      *
      * @param \Cake\Event\Event $event Fired event.
@@ -147,6 +108,7 @@ class PlaceholdersBehavior extends Behavior
      */
     public function afterSave(Event $event, EntityInterface $entity): void
     {
+        $association = $this->getAssociation($this->getConfigOrFail('relation'));
         $fields = $this->getConfig('fields', []);
         $anyDirty = array_reduce(
             $fields,
@@ -155,12 +117,13 @@ class PlaceholdersBehavior extends Behavior
             },
             false
         );
-        if ($anyDirty === false) {
+        if ($association === null || $anyDirty === false) {
             // Nothing to do.
             return;
         }
-
-        $association = $this->getAssociation(true);
+        if (!in_array($association->type(), [Association::ONE_TO_MANY, Association::MANY_TO_MANY])) {
+            throw new InvalidArgumentException(sprintf('Invalid association type "%s"', get_class($association)));
+        }
 
         $extract = $this->getConfig('extract', [static::class, 'extractPlaceholders']);
         $placeholders = $extract($entity, $fields);
@@ -210,54 +173,5 @@ class PlaceholdersBehavior extends Behavior
                 return $entity;
             })
             ->toList();
-    }
-
-    /**
-     * Lock entity from being soft-deleted if it is placeholded somewhere.
-     *
-     * @param \Cake\Event\Event $event Dispatched event.
-     * @param \Cake\Datasource\EntityInterface $entity Entity being saved.
-     * @return void
-     */
-    public function beforeSave(Event $event, EntityInterface $entity): void
-    {
-        if (!$entity->isDirty('deleted') || !$entity->get('deleted')) {
-            return;
-        }
-
-        $this->ensureNotPlaceholded($entity);
-    }
-
-    /**
-     * Ensure an entity does not appear as a placeholder.
-     *
-     * @param \Cake\Datasource\EntityInterface $entity Entity being checked.
-     * @return void
-     *
-     * @throws \BEdita\Core\Exception\LockedResourceException
-     */
-    protected function ensureNotPlaceholded(EntityInterface $entity): void
-    {
-        $Table = $this->getTable();
-        $association = $this->getAssociation(false);
-
-        $refCount = $Table->find()
-            ->select(['existing' => 1])
-            ->where(array_combine(
-                array_map([$Table, 'aliasField'], (array)$Table->getPrimaryKey()),
-                $entity->extract((array)$Table->getPrimaryKey())
-            ))
-            ->innerJoinWith($association->getName())
-            ->count();
-        if ($refCount === 0) {
-            return;
-        }
-
-        throw new LockedResourceException(__d(
-            'bedita',
-            'Cannot delete object {0} because it is still placeholded in {1,plural,=1{one object} other{# objects}}',
-            $entity->id,
-            $refCount
-        ));
     }
 }

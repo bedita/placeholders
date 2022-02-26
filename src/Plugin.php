@@ -14,6 +14,7 @@
 namespace BEdita\Placeholders;
 
 use BEdita\Placeholders\Event\BootstrapEventHandler;
+use BEdita\Placeholders\Event\JsonSchemaEventHandler;
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
@@ -25,12 +26,15 @@ class Plugin extends BasePlugin
 {
     /**
      * {@inheritDoc}
+     *
+     * @codeCoverageIgnore
      */
     public function bootstrap(PluginApplicationInterface $app)
     {
         parent::bootstrap($app);
 
         EventManager::instance()
-            ->on(new BootstrapEventHandler());
+            ->on(new BootstrapEventHandler())
+            ->on(new JsonSchemaEventHandler());
     }
 }

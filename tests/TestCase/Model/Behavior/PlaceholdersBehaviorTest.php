@@ -13,26 +13,29 @@
 
 namespace BEdita\Placeholders\Test\TestCase\Model\Behavior;
 
-use BEdita\Core\Exception\LockedResourceException;
-use BEdita\Core\Filesystem\FilesystemRegistry;
 use BEdita\Core\Model\Action\AddRelatedObjectsAction;
-use BEdita\Core\Model\Behavior\PlaceholdersBehavior;
-use Cake\Core\Configure;
+use BEdita\Placeholders\Event\BootstrapEventHandler;
+use BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior;
+use Cake\Datasource\ModelAwareTrait;
+use Cake\Event\EventManager;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 
 /**
- * {@see \BEdita\Core\Model\Behavior\PlaceholdersBehavior} Test Case
+ * {@see \BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior} Test Case
  *
  * @coversDefaultClass \BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior
+ *
+ * @property \BEdita\Core\Model\Table\ObjectsTable $Documents
+ * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
 class PlaceholdersBehaviorTest extends TestCase
 {
+    use ModelAwareTrait;
+
     /**
-     * Fixtures
-     *
-     * @var array
+     * @inheritDoc
      */
     public $fixtures = [
         'plugin.BEdita/Core.ObjectTypes',
@@ -53,20 +56,17 @@ class PlaceholdersBehaviorTest extends TestCase
         'plugin.BEdita/Core.History',
     ];
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     public function setUp()
     {
         parent::setUp();
 
-        FilesystemRegistry::setConfig(Configure::read('Filesystem'));
-    }
+        EventManager::instance()->on(new BootstrapEventHandler());
 
-    /** @inheritDoc */
-    public function tearDown()
-    {
-        FilesystemRegistry::dropAll();
-
-        parent::tearDown();
+        $this->loadModel('Documents');
+        $this->loadModel('Media');
     }
 
     /**
@@ -263,20 +263,18 @@ class PlaceholdersBehaviorTest extends TestCase
             ],
         ];
 
-        $table = $this->getTableLocator()->get('Documents');
-
         // Save with placeholder in body.
-        $entity = $table->get(2, ['contain' => ['ObjectTypes']]);
-        $entity->set('body', $body);
-        $table->saveOrFail($entity);
+        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes']]);
+        $document->body = $body;
+        $this->Documents->saveOrFail($document);
 
         // Reload entity from database, with placeholders.
-        $entity = $table->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
-        static::assertSame($body, $entity->get('body'), 'Entity body has been changed');
-        static::assertTrue($entity->has('placeholder'));
+        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        static::assertSame($body, $document->body, 'Entity body has been changed');
+        static::assertTrue($document->has('placeholder'));
 
         // Run assertions.
-        $placeholders = $entity->get('placeholder');
+        $placeholders = $document->get('placeholder');
         $ids = Hash::extract($placeholders, '{n}.id');
         static::assertSame(array_keys($expected), $ids);
         foreach ($placeholders as $placeholder) {
@@ -316,32 +314,29 @@ class PlaceholdersBehaviorTest extends TestCase
             ],
         ];
 
-        $table = $this->getTableLocator()->get('Documents');
-
         // Save hypothetical previous data.
-        $media = $this->getTableLocator()->get('Media');
-        $action = new AddRelatedObjectsAction(['association' => $table->getAssociation('Placeholder')]);
+        $action = new AddRelatedObjectsAction(['association' => $this->Documents->getAssociation('Placeholder')]);
         $action([
-            'entity' => $table->get(2, ['contain' => ['ObjectTypes']]),
+            'entity' => $this->Documents->get(2, ['contain' => ['ObjectTypes']]),
             'relatedEntities' => [
-                $media->get(10, ['contain' => ['ObjectTypes']])->set(['_joinData' => ['params' => ['description' => []]]]),
-                $media->get(14, ['contain' => ['ObjectTypes']]),
+                $this->Media->get(10, ['contain' => ['ObjectTypes']])->set(['_joinData' => ['params' => ['description' => []]]]),
+                $this->Media->get(14, ['contain' => ['ObjectTypes']]),
             ],
         ]);
 
         // Save with placeholder in body.
-        $entity = $table->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
-        static::assertSame([10, 14], Hash::extract($entity->get('placeholder'), '{n}.id')); // Check that previous placeholders exist.
-        $entity->set('body', $body);
-        $table->saveOrFail($entity);
+        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        static::assertSame([10, 14], Hash::extract($document->get('placeholder'), '{n}.id')); // Check that previous placeholders exist.
+        $document->body = $body;
+        $this->Documents->saveOrFail($document);
 
         // Reload entity from database, with placeholders.
-        $entity = $table->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
-        static::assertSame($body, $entity->get('body'), 'Entity body has been changed');
-        static::assertTrue($entity->has('placeholder'));
+        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        static::assertSame($body, $document->body, 'Entity body has been changed');
+        static::assertTrue($document->has('placeholder'));
 
         // Run assertions.
-        $placeholders = $entity->get('placeholder');
+        $placeholders = $document->get('placeholder');
         $ids = Hash::extract($placeholders, '{n}.id');
         static::assertSame(array_keys($expected), $ids);
         foreach ($placeholders as $placeholder) {
@@ -365,64 +360,30 @@ class PlaceholdersBehaviorTest extends TestCase
     {
         $body = '<h1>My sweet placeholder</h1>';
 
-        $table = $this->getTableLocator()->get('Documents');
-
         // Save hypothetical previous data.
-        $media = $this->getTableLocator()->get('Media');
-        $action = new AddRelatedObjectsAction(['association' => $table->getAssociation('Placeholder')]);
+        $action = new AddRelatedObjectsAction(['association' => $this->Documents->getAssociation('Placeholder')]);
         $action([
-            'entity' => $table->get(2, ['contain' => ['ObjectTypes']]),
+            'entity' => $this->Documents->get(2, ['contain' => ['ObjectTypes']]),
             'relatedEntities' => [
-                $media->get(10, ['contain' => ['ObjectTypes']])->set(['_joinData' => ['params' => ['description' => []]]]),
-                $media->get(14, ['contain' => ['ObjectTypes']]),
+                $this->Media->get(10, ['contain' => ['ObjectTypes']])->set(['_joinData' => ['params' => ['description' => []]]]),
+                $this->Media->get(14, ['contain' => ['ObjectTypes']]),
             ],
         ]);
 
         // Save with placeholder in body.
-        $entity = $table->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
-        static::assertSame([10, 14], Hash::extract($entity->get('placeholder'), '{n}.id')); // Check that previous placeholders exist.
-        $entity->set('body', $body);
-        $table->saveOrFail($entity);
+        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        static::assertSame([10, 14], Hash::extract($document->get('placeholder'), '{n}.id')); // Check that previous placeholders exist.
+        $document->body = $body;
+        $this->Documents->saveOrFail($document);
 
         // Reload entity from database, with placeholders.
-        $entity = $table->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
-        static::assertSame($body, $entity->get('body'), 'Entity body has been changed');
-        static::assertTrue($entity->has('placeholder'));
+        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        static::assertSame($body, $document->body, 'Entity body has been changed');
+        static::assertTrue($document->has('placeholder'));
 
         // Run assertions.
-        $placeholders = $entity->get('placeholder');
+        $placeholders = $document->get('placeholder');
         $ids = Hash::extract($placeholders, '{n}.id');
         static::assertSame([], $ids);
-    }
-
-    /**
-     * Test {@see PlaceholdersBehavior::beforeSave()}.
-     *
-     * @return void
-     *
-     * @covers ::beforeSave()
-     * @covers ::getAssociation()
-     * @covers ::ensureNotPlaceholded()
-     */
-    public function testBeforeSaveLockedEntity(): void
-    {
-        $body = '<!-- BE-PLACEHOLDER.10 --><h1>My sweet placeholder</h1>';
-
-        // Save with placeholder in body.
-        $table = $this->getTableLocator()->get('Documents');
-        $entity = $table->get(2, ['contain' => ['ObjectTypes']]);
-        $entity->set('body', $body);
-        $table->saveOrFail($entity);
-
-        $entity = $table->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
-        static::assertSame([10], Hash::extract($entity->get('placeholder'), '{n}.id'));
-
-        // Try to delete media.
-        $this->expectException(LockedResourceException::class);
-        $this->expectExceptionMessage('Cannot delete object 10 because it is still placeholded in one object');
-        $table = $this->getTableLocator()->get('Media');
-        $entity = $table->get(10, ['contain' => ['ObjectTypes']]);
-        $entity->set('deleted', true);
-        $table->saveOrFail($entity);
     }
 }

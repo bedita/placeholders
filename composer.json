@@ -6,8 +6,8 @@
     "require": {
         "php": ">= 7.4",
         "cakephp/cakephp": "^3.8",
-        "bedita/core": "^4.2.0",
-        "bedita/api": "^4.2.0"
+        "bedita/core": "dev-4-cactus as 4.4.0-dev",
+        "bedita/api": "dev-4-cactus as 4.4.0-dev"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^3.0",
