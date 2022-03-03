@@ -123,7 +123,9 @@ class PlaceholdersComponentTest extends TestCase
     public function testBeforeFilter(?Exception $expected, ServerRequest $request): void
     {
         if ($expected !== null) {
-            $this->expectExceptionObject($expected);
+            $this->expectException(get_class($expected));
+            $this->expectExceptionCode($expected->getCode());
+            $this->expectExceptionMessage($expected->getMessage());
         }
 
         $this->controller->setRequest($request);

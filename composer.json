@@ -6,13 +6,13 @@
     "require": {
         "php": ">= 7.4",
         "cakephp/cakephp": "^3.8",
-        "bedita/core": "dev-4-cactus as 4.4.0-dev",
-        "bedita/api": "dev-4-cactus as 4.4.0-dev"
+        "bedita/core": "dev-4-cactus as 4.7.0-dev",
+        "bedita/api": "dev-4-cactus as 4.7.0-dev"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^3.0",
-        "cakephp/plugin-installer": "^1.0",
-        "phpunit/phpunit": "^5.7.14|^6.0"
+        "cakephp/plugin-installer": "^1.3",
+        "phpunit/phpunit": "^6.0"
     },
     "autoload": {
         "psr-4": {
