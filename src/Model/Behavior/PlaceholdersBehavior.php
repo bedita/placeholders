@@ -142,6 +142,7 @@ class PlaceholdersBehavior extends Behavior
      */
     protected function prepareEntities(Table $table, array $placeholders): array
     {
+        /** @var string $pk */
         $pk = $table->getPrimaryKey();
         $ids = array_column($placeholders, 'id');
         if (empty($ids)) {
@@ -150,7 +151,9 @@ class PlaceholdersBehavior extends Behavior
 
         $fields = [$table->aliasField($pk)];
         if ($table->hasAssociation('ObjectTypes')) {
-            $fields = array_merge($fields, [$table->aliasField($table->getAssociation('ObjectTypes')->getForeignKey())]);
+            /** @var string $fk */
+            $fk = $table->getAssociation('ObjectTypes')->getForeignKey();
+            $fields = array_merge($fields, [$table->aliasField($fk)]);
         }
 
         return $table->find()
