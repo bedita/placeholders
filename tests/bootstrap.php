@@ -45,6 +45,7 @@ define('LOGS', ROOT . DS . 'logs' . DS);
 define('CONFIG', ROOT . DS . 'config' . DS);
 define('CACHE', TMP . 'cache' . DS);
 define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
+define('UNIT_TEST_RUN', 1); // TODO: remove after https://github.com/bedita/bedita/pull/1890 is merged
 
 Configure::write('debug', true);
 Configure::write('App', [
