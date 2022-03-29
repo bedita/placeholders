@@ -1,4 +1,5 @@
 /composer.lock
+/phpcs.xml
 /phpunit.xml
 /vendor
 config/Migrations/schema-dump-default.lock
