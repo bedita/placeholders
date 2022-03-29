@@ -73,7 +73,7 @@ class PlaceholdedBehavior extends Behavior
 
             $refCount = $Table->find()
                 ->select(['existing' => 1])
-                ->where(array_combine(
+                ->where((array)array_combine(
                     array_map([$Table, 'aliasField'], (array)$Table->getPrimaryKey()),
                     $entity->extract((array)$Table->getPrimaryKey())
                 ))

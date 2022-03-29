@@ -114,7 +114,7 @@ class PlaceholdersComponentTest extends TestCase
      * Test {@see PlaceholdersComponent::beforeFilter()}.
      *
      * @param \Exception|null $expected Expected exception.
-     * @param \Cake\Http\ServerRequest Request.
+     * @param \Cake\Http\ServerRequest $request Request.
      * @return void
      *
      * @covers ::beforeFilter()
