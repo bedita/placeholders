@@ -2,7 +2,7 @@
 
 [![Github Actions PHP](https://github.com/bedita/placeholders/workflows/php/badge.svg)](https://github.com/bedita/placeholders/actions?query=workflow%3Aphp)
 [![codecov](https://codecov.io/gh/bedita/placeholders/branch/main/graph/badge.svg)](https://codecov.io/gh/bedita/placeholders)
-[![phpstan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg)](https://phpstan.org)
+[![phpstan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg)](https://phpstan.org)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bedita/placeholders/badges/quality-score.png)](https://scrutinizer-ci.com/g/bedita/placeholders/)
 [![Version](https://img.shields.io/packagist/v/bedita/placeholders.svg?label=stable)](https://packagist.org/packages/bedita/placeholders)
 [![License](https://img.shields.io/badge/License-LGPL_v3-orange.svg)](https://github.com/bedita/placeholders/blob/main/LICENSE.LGPL)
