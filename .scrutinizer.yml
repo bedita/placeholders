@@ -7,7 +7,7 @@ filter:
     - 'vendor/*'
 
 build:
-  image: default-focal
+  image: default-bionic
   nodes:
     analysis:
       environment:
