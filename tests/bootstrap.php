@@ -1,15 +1,8 @@
 <?php
 declare(strict_types=1);
 
-/**
- * Test suite bootstrap for Plugin.
- *
- * This function is used to find the location of CakePHP whether CakePHP
- * has been installed as a dependency of the plugin, or the plugin is itself
- * installed as a dependency of an application.
- */
-
 use BEdita\Core\Filesystem\FilesystemRegistry;
+use BEdita\Core\ORM\Locator\TableLocator;
 use BEdita\Placeholders\Test\TestApp\Application;
 use BEdita\Placeholders\Test\TestApp\Filesystem\Adapter\NullAdapter;
 use Cake\Cache\Cache;
@@ -22,6 +15,7 @@ use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
+use Migrations\TestSuite\Migrator;
 
 $findRoot = function ($root) {
     do {
@@ -47,7 +41,6 @@ define('LOGS', ROOT . DS . 'logs' . DS);
 define('CONFIG', ROOT . DS . 'config' . DS);
 define('CACHE', TMP . 'cache' . DS);
 define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
-define('UNIT_TEST_RUN', 1); // TODO: remove after https://github.com/bedita/bedita/pull/1890 is merged
 
 Configure::write('debug', true);
 Configure::write('App', [
@@ -79,17 +72,25 @@ Cache::setConfig([
     '_bedita_core_' => ['className' => NullEngine::class],
 ]);
 
+ConnectionManager::drop('test');
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
-ConnectionManager::setConfig('test', [
-    'url' => getenv('db_dsn'),
-    // 'log' => true,
-]);
+ConnectionManager::setConfig('test', ['url' => getenv('db_dsn')]);
 ConnectionManager::alias('test', 'default');
 
 Router::reload();
-Security::setSalt('BEDITA');
+
+if (!TableRegistry::getTableLocator() instanceof TableLocator) {
+    TableRegistry::setTableLocator(new TableLocator());
+}
+
+Security::setSalt('3ikcOGwIYlAP6msatcNj76a6iueuyasdNTn');
+
+(new Migrator())->runMany([
+    ['plugin' => 'BEdita/Core'],
+    ['connection' => 'test'],
+]);
 
 FilesystemRegistry::setConfig([
     'default' => ['className' => NullAdapter::class],
@@ -102,6 +103,4 @@ $app->pluginBootstrap();
 
 // clear all before running tests
 TableRegistry::getTableLocator()->clear();
-Cache::clear('_cake_core_');
-Cache::clear('_cake_model_');
-Cache::clear('_bedita_object_types_');
+Cache::clearAll();
