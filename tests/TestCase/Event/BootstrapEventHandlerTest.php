@@ -5,7 +5,6 @@ namespace BEdita\Placeholders\Test\TestCase\Event;
 
 use BEdita\API\Controller\FoldersController;
 use BEdita\API\Controller\RolesController;
-use BEdita\API\TestSuite\IntegrationTestCase;
 use BEdita\Placeholders\Controller\Component\PlaceholdersComponent;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
 use BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior;
@@ -13,13 +12,14 @@ use BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * {@see \BEdita\Placeholders\Event\BootstrapEventHandler} Test Case
  *
  * @coversDefaultClass \BEdita\Placeholders\Event\BootstrapEventHandler
  */
-class BootstrapEventHandlerTest extends IntegrationTestCase
+class BootstrapEventHandlerTest extends TestCase
 {
     use LocatorAwareTrait;
 
