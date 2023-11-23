@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -15,7 +17,6 @@ namespace BEdita\Placeholders\Test\TestCase\Model\Behavior;
 
 use BEdita\Core\Exception\LockedResourceException;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
-use BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventManager;
 use Cake\TestSuite\TestCase;
@@ -25,7 +26,6 @@ use Cake\Utility\Hash;
  * {@see \BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior} Test Case
  *
  * @coversDefaultClass \BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior
- *
  * @property \BEdita\Core\Model\Table\ObjectsTable $Documents
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
@@ -72,7 +72,6 @@ class PlaceholdedBehaviorTest extends TestCase
      * Test {@see PlaceholdedBehavior::beforeSave()}.
      *
      * @return void
-     *
      * @covers ::beforeSave()
      * @covers ::getAssociation()
      * @covers ::ensureNotPlaceholded()
@@ -101,7 +100,6 @@ class PlaceholdedBehaviorTest extends TestCase
      * Test {@see PlaceholdedBehavior::beforeSave()} with an entity that is not placeholded anywhere.
      *
      * @return void
-     *
      * @covers ::beforeSave()
      * @covers ::getAssociation()
      * @covers ::ensureNotPlaceholded()

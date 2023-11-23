@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace BEdita\Placeholders\Test\TestCase\Event;
 
@@ -47,7 +48,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onControllerInitialize()}.
      *
      * @return void
-     *
      * @covers ::onControllerInitialize()
      */
     public function testOnControllerInitialize()
@@ -67,7 +67,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onControllerInitialize()} with a generic resources controller.
      *
      * @return void
-     *
      * @covers ::onControllerInitialize()
      */
     public function testOnControllerInitializeResourcesController()
@@ -86,7 +85,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onModelInitialize()}.
      *
      * @return void
-     *
      * @covers ::onModelInitialize()
      */
     public function testOnModelInitialize()
@@ -103,7 +101,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onModelInitialize()} with a generic table.
      *
      * @return void
-     *
      * @covers ::onModelInitialize()
      */
     public function testOnModelInitializeOtherTable()

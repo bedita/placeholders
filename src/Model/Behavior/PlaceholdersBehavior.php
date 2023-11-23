@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -13,7 +15,6 @@
 
 namespace BEdita\Placeholders\Model\Behavior;
 
-use BEdita\Core\Exception\LockedResourceException;
 use BEdita\Core\Model\Action\SetRelatedObjectsAction;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\EntityInterface;
@@ -59,7 +60,7 @@ class PlaceholdersBehavior extends Behavior
     /**
      * Extract placeholders from an entity.
      *
-     * @param EntityInterface $entity The entity from which to extract placeholder references.
+     * @param \Cake\Datasource\EntityInterface $entity The entity from which to extract placeholder references.
      * @param string[] $fields Field names.
      * @return array[] A list of arrays, each with `id` and `params` set.
      */
@@ -72,7 +73,10 @@ class PlaceholdersBehavior extends Behavior
                 continue;
             }
 
-            if (!is_string($datum) || preg_match_all(static::REGEX, $datum, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE) === false) {
+            if (
+                !is_string($datum) ||
+                preg_match_all(static::REGEX, $datum, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE) === false
+            ) {
                 throw new RuntimeException(__d('bedita', 'Error extracting placeholders'));
             }
 

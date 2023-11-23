@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -26,7 +28,6 @@ use Cake\Utility\Hash;
  * {@see \BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior} Test Case
  *
  * @coversDefaultClass \BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior
- *
  * @property \BEdita\Core\Model\Table\ObjectsTable $Documents
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
@@ -222,7 +223,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * @param array $data Entity data.
      * @param string[] $fields Fields.
      * @return void
-     *
      * @dataProvider extractPlaceholdersProvider()
      * @covers ::extractPlaceholders()
      */
@@ -238,7 +238,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     *
      * @covers ::afterSave()
      * @covers ::getAssociation()
      * @covers ::prepareEntities()
@@ -289,7 +288,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     *
      * @covers ::afterSave()
      * @covers ::getAssociation()
      * @covers ::prepareEntities()
@@ -351,7 +349,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     *
      * @covers ::afterSave()
      * @covers ::getAssociation()
      * @covers ::prepareEntities()

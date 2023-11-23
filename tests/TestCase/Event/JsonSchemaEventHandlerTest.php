@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace BEdita\Placeholders\Test\TestCase\Event;
 
@@ -6,14 +7,12 @@ use BEdita\Placeholders\Event\BootstrapEventHandler;
 use BEdita\Placeholders\Event\JsonSchemaEventHandler;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventManager;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
  * {@see \BEdita\Placeholders\Event\JsonSchemaEventHandler} Test Case
  *
  * @coversDefaultClass \BEdita\Placeholders\Event\JsonSchemaEventHandler
- *
  * @property \BEdita\Core\Model\Table\ObjectTypesTable $ObjectTypes
  */
 class JsonSchemaEventHandlerTest extends TestCase
@@ -65,7 +64,6 @@ class JsonSchemaEventHandlerTest extends TestCase
      * Test {@see JsonSchemaEventHandler::onGetSchema()}.
      *
      * @return void
-     *
      * @covers ::onGetSchema()
      */
     public function testOnGetSchema(): void
@@ -112,7 +110,6 @@ class JsonSchemaEventHandlerTest extends TestCase
      * Test {@see JsonSchemaEventHandler::onGetSchema()}.
      *
      * @return void
-     *
      * @covers ::onGetSchema()
      */
     public function testOnGetSchemaWithoutPlaceholders(): void

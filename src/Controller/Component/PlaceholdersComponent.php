@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -38,11 +40,20 @@ class PlaceholdersComponent extends Component
     public function beforeFilter(): void
     {
         $request = $this->getController()->getRequest();
-        if ($request->getParam('action') !== 'relationships' || !in_array($request->getParam('relationship'), (array)$this->getConfig('relations'))) {
+        if (
+            $request->getParam('action') !== 'relationships' ||
+            !in_array($request->getParam('relationship'), (array)$this->getConfig('relations'))
+        ) {
             return;
         }
         if (!in_array(mb_strtoupper($request->getMethod()), ['GET', 'HEAD', 'OPTIONS'])) {
-            throw new ForbiddenException(__d('placeholders', 'Relationships of type {0} can only be managed saving an object', $request->getParam('relationship')));
+            throw new ForbiddenException(
+                __d(
+                    'placeholders',
+                    'Relationships of type {0} can only be managed saving an object',
+                    $request->getParam('relationship')
+                )
+            );
         }
     }
 }

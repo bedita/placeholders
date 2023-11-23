@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -116,7 +118,6 @@ class PlaceholdersComponentTest extends TestCase
      * @param \Exception|null $expected Expected exception.
      * @param \Cake\Http\ServerRequest $request Request.
      * @return void
-     *
      * @covers ::beforeFilter()
      * @dataProvider beforeFilterProvider()
      */

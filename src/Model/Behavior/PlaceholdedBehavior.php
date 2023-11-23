@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -57,7 +59,6 @@ class PlaceholdedBehavior extends Behavior
      *
      * @param \Cake\Datasource\EntityInterface $entity Entity being checked.
      * @return void
-     *
      * @throws \BEdita\Core\Exception\LockedResourceException
      */
     protected function ensureNotPlaceholded(EntityInterface $entity): void
