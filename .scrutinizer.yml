@@ -7,12 +7,12 @@ filter:
     - 'vendor/*'
 
 build:
-  image: default-bionic
+  image: default-jammy
   nodes:
     analysis:
       environment:
         php:
-          version: 7.4
+          version: 8.2
           pecl_extensions:
             - zip
       tests:
