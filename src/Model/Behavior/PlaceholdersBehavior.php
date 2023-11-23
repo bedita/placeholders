@@ -49,7 +49,7 @@ class PlaceholdersBehavior extends Behavior
      *      a list of associative arrays with `id` and `params` fields.
      *      If `null`, uses {@see \BEdita\Core\Model\Behavior\PlaceholdersBehavior::extractPlaceholders()}.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'relation' => 'placeholder',

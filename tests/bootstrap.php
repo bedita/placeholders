@@ -102,6 +102,6 @@ $app->pluginBootstrap();
 
 // clear all before running tests
 TableRegistry::getTableLocator()->clear();
-Cache::clear(false, '_cake_core_');
-Cache::clear(false, '_cake_model_');
-Cache::clear(false, '_bedita_object_types_');
+Cache::clear('_cake_core_');
+Cache::clear('_cake_model_');
+Cache::clear('_bedita_object_types_');

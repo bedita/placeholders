@@ -30,7 +30,7 @@ class JsonSchemaEventHandler implements EventListenerInterface
     /**
      * @inheritDoc
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'ObjectType.getSchema' => 'onGetSchema',

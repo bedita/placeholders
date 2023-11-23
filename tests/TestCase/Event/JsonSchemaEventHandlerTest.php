@@ -44,7 +44,7 @@ class JsonSchemaEventHandlerTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -53,7 +53,7 @@ class JsonSchemaEventHandlerTest extends TestCase
         EventManager::instance()->on(new JsonSchemaEventHandler());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->getTableLocator()->clear();
 
