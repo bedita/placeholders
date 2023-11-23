@@ -17,8 +17,8 @@ namespace BEdita\Placeholders\Test\TestCase\Model\Behavior;
 
 use BEdita\Core\Exception\LockedResourceException;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventManager;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 
@@ -31,7 +31,7 @@ use Cake\Utility\Hash;
  */
 class PlaceholdedBehaviorTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @inheritDoc
@@ -56,6 +56,20 @@ class PlaceholdedBehaviorTest extends TestCase
     ];
 
     /**
+     * ObjectsTable instance
+     *
+     * @var \BEdita\Core\Model\Table\ObjectsTable
+     */
+    protected $Documents = null;
+
+    /**
+     * MediaTable instance
+     *
+     * @var \BEdita\Core\Model\Table\MediaTable
+     */
+    protected $Media = null;
+
+    /**
      * @inheritDoc
      */
     public function setUp(): void
@@ -64,8 +78,12 @@ class PlaceholdedBehaviorTest extends TestCase
 
         EventManager::instance()->on(new BootstrapEventHandler());
 
-        $this->loadModel('Documents');
-        $this->loadModel('Media');
+        /** @var \BEdita\Core\Model\Table\ObjectsTable $documents */
+        $documents = $this->fetchTable('Documents');
+        $this->Documents = $documents;
+        /** @var \BEdita\Core\Model\Table\MediaTable $media */
+        $media = $this->fetchTable('Media');
+        $this->Media = $media;
     }
 
     /**

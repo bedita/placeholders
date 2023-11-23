@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace BEdita\Placeholders\Test\Fixture;
 
-use BEdita\Core\TestSuite\Fixture\TestFixture;
+use BEdita\Core\Test\Fixture\RelationsFixture as BEditaRelationsFixture;
 
 /**
  * Fixture for `relations` table.
  */
-class RelationsFixture extends TestFixture
+class RelationsFixture extends BEditaRelationsFixture
 {
     /**
      * Records
