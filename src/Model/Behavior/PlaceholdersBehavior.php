@@ -165,6 +165,7 @@ class PlaceholdersBehavior extends Behavior
             ->where(function (QueryExpression $exp) use ($table, $pk, $ids): QueryExpression {
                 return $exp->in($table->aliasField($pk), $ids);
             })
+            ->all()
             ->map(function (EntityInterface $entity) use ($pk, $placeholders): EntityInterface {
                 $id = $entity->get($pk);
                 foreach ($placeholders as $datum) {

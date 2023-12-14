@@ -64,7 +64,7 @@ class PlaceholdedBehavior extends Behavior
      */
     protected function ensureNotPlaceholded(EntityInterface $entity): void
     {
-        $Table = $this->getTable();
+        $Table = $this->table();
 
         $relations = $this->getConfig('relations', []);
         foreach ($relations as $relation) {
