@@ -34,6 +34,7 @@ class Application extends BaseApplication
     {
         $this->addPlugin('BEdita/Core');
         $this->addPlugin('BEdita/API');
+        $this->addPlugin('BEdita/Placeholders');
     }
 
     /**

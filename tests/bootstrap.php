@@ -87,10 +87,7 @@ if (!TableRegistry::getTableLocator() instanceof TableLocator) {
 
 Security::setSalt('3ikcOGwIYlAP6msatcNj76a6iueuyasdNTn');
 
-(new Migrator())->runMany([
-    ['plugin' => 'BEdita/Core'],
-    ['connection' => 'test'],
-]);
+(new Migrator())->run(['plugin' => 'BEdita/Core']);
 
 FilesystemRegistry::setConfig([
     'default' => ['className' => NullAdapter::class],
