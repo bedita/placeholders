@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace BEdita\Placeholders\Test\Fixture;
 
-use BEdita\Core\TestSuite\Fixture\TestFixture;
+use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * Fixture for `object_relations` table.

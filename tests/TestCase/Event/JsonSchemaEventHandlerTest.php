@@ -1,24 +1,22 @@
 <?php
+declare(strict_types=1);
 
 namespace BEdita\Placeholders\Test\TestCase\Event;
 
 use BEdita\Placeholders\Event\BootstrapEventHandler;
 use BEdita\Placeholders\Event\JsonSchemaEventHandler;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventManager;
-use Cake\ORM\TableRegistry;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 
 /**
  * {@see \BEdita\Placeholders\Event\JsonSchemaEventHandler} Test Case
  *
  * @coversDefaultClass \BEdita\Placeholders\Event\JsonSchemaEventHandler
- *
- * @property \BEdita\Core\Model\Table\ObjectTypesTable $ObjectTypes
  */
 class JsonSchemaEventHandlerTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @inheritDoc
@@ -43,18 +41,27 @@ class JsonSchemaEventHandlerTest extends TestCase
     ];
 
     /**
+     * ObjectTypesTable instance
+     *
+     * @var \BEdita\Core\Model\Table\ObjectTypesTable
+     */
+    protected $ObjectTypes = null;
+
+    /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->loadModel('ObjectTypes');
+        /** @var \BEdita\Core\Model\Table\ObjectTypesTable $objectTypes */
+        $objectTypes = $this->fetchTable('ObjectTypes');
+        $this->ObjectTypes = $objectTypes;
 
         EventManager::instance()->on(new JsonSchemaEventHandler());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->getTableLocator()->clear();
 
@@ -65,7 +72,6 @@ class JsonSchemaEventHandlerTest extends TestCase
      * Test {@see JsonSchemaEventHandler::onGetSchema()}.
      *
      * @return void
-     *
      * @covers ::onGetSchema()
      */
     public function testOnGetSchema(): void
@@ -112,7 +118,6 @@ class JsonSchemaEventHandlerTest extends TestCase
      * Test {@see JsonSchemaEventHandler::onGetSchema()}.
      *
      * @return void
-     *
      * @covers ::onGetSchema()
      */
     public function testOnGetSchemaWithoutPlaceholders(): void

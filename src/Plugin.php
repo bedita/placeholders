@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -29,7 +31,7 @@ class Plugin extends BasePlugin
      *
      * @codeCoverageIgnore
      */
-    public function bootstrap(PluginApplicationInterface $app)
+    public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
 

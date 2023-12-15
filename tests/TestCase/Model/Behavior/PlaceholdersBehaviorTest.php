@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -16,9 +18,9 @@ namespace BEdita\Placeholders\Test\TestCase\Model\Behavior;
 use BEdita\Core\Model\Action\AddRelatedObjectsAction;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
 use BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventManager;
 use Cake\ORM\Entity;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 
@@ -26,13 +28,12 @@ use Cake\Utility\Hash;
  * {@see \BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior} Test Case
  *
  * @coversDefaultClass \BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior
- *
  * @property \BEdita\Core\Model\Table\ObjectsTable $Documents
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
 class PlaceholdersBehaviorTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @inheritDoc
@@ -57,16 +58,34 @@ class PlaceholdersBehaviorTest extends TestCase
     ];
 
     /**
+     * ObjectsTable instance
+     *
+     * @var \BEdita\Core\Model\Table\ObjectsTable
+     */
+    protected $Documents = null;
+
+    /**
+     * MediaTable instance
+     *
+     * @var \BEdita\Core\Model\Table\MediaTable
+     */
+    protected $Media = null;
+
+    /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         EventManager::instance()->on(new BootstrapEventHandler());
 
-        $this->loadModel('Documents');
-        $this->loadModel('Media');
+        /** @var \BEdita\Core\Model\Table\ObjectsTable $documents */
+        $documents = $this->fetchTable('Documents');
+        $this->Documents = $documents;
+        /** @var \BEdita\Core\Model\Table\MediaTable $media */
+        $media = $this->fetchTable('Media');
+        $this->Media = $media;
     }
 
     /**
@@ -222,7 +241,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * @param array $data Entity data.
      * @param string[] $fields Fields.
      * @return void
-     *
      * @dataProvider extractPlaceholdersProvider()
      * @covers ::extractPlaceholders()
      */
@@ -238,7 +256,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     *
      * @covers ::afterSave()
      * @covers ::getAssociation()
      * @covers ::prepareEntities()
@@ -289,7 +306,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     *
      * @covers ::afterSave()
      * @covers ::getAssociation()
      * @covers ::prepareEntities()
@@ -351,7 +367,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     *
      * @covers ::afterSave()
      * @covers ::getAssociation()
      * @covers ::prepareEntities()

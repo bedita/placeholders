@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -15,9 +17,8 @@ namespace BEdita\Placeholders\Test\TestCase\Model\Behavior;
 
 use BEdita\Core\Exception\LockedResourceException;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
-use BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventManager;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 
@@ -25,13 +26,12 @@ use Cake\Utility\Hash;
  * {@see \BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior} Test Case
  *
  * @coversDefaultClass \BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior
- *
  * @property \BEdita\Core\Model\Table\ObjectsTable $Documents
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
 class PlaceholdedBehaviorTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @inheritDoc
@@ -56,23 +56,40 @@ class PlaceholdedBehaviorTest extends TestCase
     ];
 
     /**
+     * ObjectsTable instance
+     *
+     * @var \BEdita\Core\Model\Table\ObjectsTable
+     */
+    protected $Documents = null;
+
+    /**
+     * MediaTable instance
+     *
+     * @var \BEdita\Core\Model\Table\MediaTable
+     */
+    protected $Media = null;
+
+    /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         EventManager::instance()->on(new BootstrapEventHandler());
 
-        $this->loadModel('Documents');
-        $this->loadModel('Media');
+        /** @var \BEdita\Core\Model\Table\ObjectsTable $documents */
+        $documents = $this->fetchTable('Documents');
+        $this->Documents = $documents;
+        /** @var \BEdita\Core\Model\Table\MediaTable $media */
+        $media = $this->fetchTable('Media');
+        $this->Media = $media;
     }
 
     /**
      * Test {@see PlaceholdedBehavior::beforeSave()}.
      *
      * @return void
-     *
      * @covers ::beforeSave()
      * @covers ::getAssociation()
      * @covers ::ensureNotPlaceholded()
@@ -101,7 +118,6 @@ class PlaceholdedBehaviorTest extends TestCase
      * Test {@see PlaceholdedBehavior::beforeSave()} with an entity that is not placeholded anywhere.
      *
      * @return void
-     *
      * @covers ::beforeSave()
      * @covers ::getAssociation()
      * @covers ::ensureNotPlaceholded()

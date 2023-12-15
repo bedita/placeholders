@@ -1,12 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace BEdita\Placeholders\Test\TestApp\Filesystem\Adapter;
 
 use BEdita\Core\Filesystem\FilesystemAdapter;
-use League\Flysystem\Adapter\NullAdapter as FlysystemNullAdapter;
+use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 
 /**
  * Null adapter, for testing.
+ * Internally it uses `\League\Flysystem\InMemory\InMemoryFilesystemAdapter`
+ *
+ * @see https://flysystem.thephpleague.com/docs/adapter/in-memory/
  */
 class NullAdapter extends FilesystemAdapter
 {
@@ -15,6 +19,6 @@ class NullAdapter extends FilesystemAdapter
      */
     protected function buildAdapter(array $config)
     {
-        return new FlysystemNullAdapter();
+        return new InMemoryFilesystemAdapter();
     }
 }

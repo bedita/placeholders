@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace BEdita\Placeholders\Test\TestCase\Event;
 
+use Authentication\AuthenticationService;
+use Authorization\AuthorizationService;
+use Authorization\Policy\MapResolver;
 use BEdita\API\Controller\FoldersController;
 use BEdita\API\Controller\RolesController;
+use BEdita\API\Policy\EndpointPolicy;
 use BEdita\Placeholders\Controller\Component\PlaceholdersComponent;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
 use BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior;
@@ -36,7 +41,7 @@ class BootstrapEventHandlerTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -47,15 +52,19 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onControllerInitialize()}.
      *
      * @return void
-     *
      * @covers ::onControllerInitialize()
      */
     public function testOnControllerInitialize()
     {
-        $controller = new FoldersController(new ServerRequest([
+        $request = new ServerRequest([
             'environment' => ['HTTP_ACCEPT' => 'application/vnd.api+json'],
-            'params' => ['_ext' => 'json', 'object_type' => 'folders'],
-        ]));
+            'params' => ['_ext' => 'json', 'object_type' => 'folders', 'action' => 'index'],
+        ]);
+        $request = $request->withAttribute('authentication', new AuthenticationService())
+            ->withAttribute('authorization', new AuthorizationService(new MapResolver([
+                ServerRequest::class => EndpointPolicy::class,
+            ])));
+        $controller = new FoldersController($request);
         $response = $controller->startupProcess();
 
         static::assertNull($response);
@@ -67,15 +76,19 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onControllerInitialize()} with a generic resources controller.
      *
      * @return void
-     *
      * @covers ::onControllerInitialize()
      */
     public function testOnControllerInitializeResourcesController()
     {
-        $controller = new RolesController(new ServerRequest([
+        $request = new ServerRequest([
             'environment' => ['HTTP_ACCEPT' => 'application/vnd.api+json'],
-            'params' => ['_ext' => 'json'],
-        ]));
+            'params' => ['_ext' => 'json', 'action' => 'index'],
+        ]);
+        $request = $request->withAttribute('authentication', new AuthenticationService())
+            ->withAttribute('authorization', new AuthorizationService(new MapResolver([
+                ServerRequest::class => EndpointPolicy::class,
+            ])));
+        $controller = new RolesController($request);
         $response = $controller->startupProcess();
 
         static::assertNull($response);
@@ -86,7 +99,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onModelInitialize()}.
      *
      * @return void
-     *
      * @covers ::onModelInitialize()
      */
     public function testOnModelInitialize()
@@ -103,7 +115,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onModelInitialize()} with a generic table.
      *
      * @return void
-     *
      * @covers ::onModelInitialize()
      */
     public function testOnModelInitializeOtherTable()

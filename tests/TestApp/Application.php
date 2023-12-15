@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -14,6 +16,7 @@
 namespace BEdita\Placeholders\Test\TestApp;
 
 use Cake\Http\BaseApplication;
+use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
 
 /**
@@ -25,19 +28,20 @@ use Cake\Routing\Middleware\RoutingMiddleware;
 class Application extends BaseApplication
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function bootstrap()
+    public function bootstrap(): void
     {
         $this->addPlugin('BEdita/Core');
         $this->addPlugin('BEdita/API');
+        $this->addPlugin('BEdita/Placeholders');
     }
 
     /**
      * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to set in your App Class
      * @return \Cake\Http\MiddlewareQueue
      */
-    public function middleware($middlewareQueue)
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         return $middlewareQueue->add(new RoutingMiddleware($this));
     }

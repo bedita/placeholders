@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -26,7 +28,7 @@ trait GetAssociationTrait
      *
      * @return \Cake\ORM\Table
      */
-    abstract public function getTable();
+    abstract public function table();
 
     /**
      * Get association for a relation.
@@ -37,7 +39,7 @@ trait GetAssociationTrait
     protected function getAssociation(string $relation): ?Association
     {
         $name = Inflector::camelize($relation);
-        $table = $this->getTable();
+        $table = $this->table();
         if (!$table->hasAssociation($name)) {
             return null;
         }

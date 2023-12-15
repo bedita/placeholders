@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2022 Atlas Srl, Chialab Srl
@@ -17,6 +19,7 @@ use BEdita\Core\Exception\LockedResourceException;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
+use Cake\Utility\Hash;
 
 /**
  * Placeholded behavior
@@ -30,7 +33,7 @@ class PlaceholdedBehavior extends Behavior
      *
      * - `relations`: names of the BEdita relations to check.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'relations' => ['placeholded'],
@@ -57,12 +60,11 @@ class PlaceholdedBehavior extends Behavior
      *
      * @param \Cake\Datasource\EntityInterface $entity Entity being checked.
      * @return void
-     *
      * @throws \BEdita\Core\Exception\LockedResourceException
      */
     protected function ensureNotPlaceholded(EntityInterface $entity): void
     {
-        $Table = $this->getTable();
+        $Table = $this->table();
 
         $relations = $this->getConfig('relations', []);
         foreach ($relations as $relation) {
@@ -83,7 +85,7 @@ class PlaceholdedBehavior extends Behavior
                 throw new LockedResourceException(__d(
                     'placeholders',
                     'Cannot delete object {0} because it is still {1} in {2,plural,=1{one object} other{# objects}}',
-                    $entity->id,
+                    (string)Hash::get($entity, 'id'),
                     $relation,
                     $refCount
                 ));
