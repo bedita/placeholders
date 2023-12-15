@@ -8,7 +8,7 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 
 /**
  * Null adapter, for testing.
- * Internally it uses  \League\Flysystem\InMemory\InMemoryFilesystemAdapter
+ * Internally it uses `\League\Flysystem\InMemory\InMemoryFilesystemAdapter`
  *
  * @see https://flysystem.thephpleague.com/docs/adapter/in-memory/
  */
