@@ -14,14 +14,14 @@ on:
 
 jobs:
   cs:
-    uses: bedita/github-workflows/.github/workflows/php-cs.yml@v1
+    uses: bedita/github-workflows/.github/workflows/php-cs.yml@v2
     with:
-      php_versions: '["7.4", "8.1", "8.2"]'
+      php_versions: '["8.3"]'
 
   stan:
-    uses: bedita/github-workflows/.github/workflows/php-stan.yml@v1
+    uses: bedita/github-workflows/.github/workflows/php-stan.yml@v2
     with:
-      php_versions: '["7.4", "8.1", "8.2"]'
+      php_versions: '["8.3"]'
 
   unit:
     name: 'Run unit tests'
@@ -30,11 +30,11 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [7.4, 8.1, 8.2]
+        php-version: [8.3]
 
     steps:
       - name: 'Checkout current revision'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
 
       - name: 'Composer config GH token if available'
         run: 'if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi'
@@ -51,7 +51,7 @@ jobs:
         run: echo "path=$(composer global config cache-dir)" >> $GITHUB_OUTPUT
 
       - name: 'Share Composer cache across runs'
-        uses: 'actions/cache@v3'
+        uses: 'actions/cache@v4'
         with:
           path: '${{ steps.cachedir.outputs.path }}'
           key: "composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.json') }}"
@@ -72,13 +72,14 @@ jobs:
           filename: 'clover.xml'
 
       - name: 'Export coverage results'
-        uses: 'codecov/codecov-action@v3'
+        uses: 'codecov/codecov-action@v5'
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: './clover.xml'
           env_vars: PHP_VERSION
 
       - name: 'Archive code coverage results'
-        uses: 'actions/upload-artifact@v3'
+        uses: 'actions/upload-artifact@v4'
         with:
           name: 'PHP ${{ matrix.php }}'
           path: 'clover.xml'
