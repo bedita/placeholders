@@ -42,7 +42,7 @@ class PlaceholdedBehavior extends Behavior
     /**
      * Lock entity from being soft-deleted if it is placeholded somewhere.
      *
-     * @param \Cake\Event\Event $event Dispatched event.
+     * @param \Cake\Event\Event<\Cake\ORM\Table> $event Dispatched event.
      * @param \Cake\Datasource\EntityInterface $entity Entity being saved.
      * @return void
      */

@@ -17,6 +17,7 @@ class NullAdapter extends FilesystemAdapter
 {
     /**
      * @inheritDoc
+     * @param array<string, mixed> $config
      */
     protected function buildAdapter(array $config): LeagueFilesystemAdapter
     {

@@ -13,7 +13,7 @@ class RelationsFixture extends TestFixture
     /**
      * Records
      *
-     * @var array
+     * @var array<int, array<string, mixed>>
      */
     public array $records = [
         [

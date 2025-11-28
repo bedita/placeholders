@@ -13,7 +13,7 @@ class RelationTypesFixture extends TestFixture
     /**
      * Records
      *
-     * @var array
+     * @var array<int, array<string, mixed>>
      */
     public array $records = [
         [
@@ -37,16 +37,4 @@ class RelationTypesFixture extends TestFixture
             'side' => 'right',
         ],
     ];
-
-    /**
-     * Before Build Schema callback
-     *
-     * Change `side` type to 'string' to avoid errors
-     *
-     * @return void
-     */
-    public function beforeBuildSchema()
-    {
-        $this->fields['side']['type'] = 'string';
-    }
 }

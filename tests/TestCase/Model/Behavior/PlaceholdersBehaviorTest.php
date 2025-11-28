@@ -100,7 +100,7 @@ class PlaceholdersBehaviorTest extends TestCase
     /**
      * Data provider for {@see PlaceholdersBehaviorTest::testExtractPlaceholders()} test case.
      *
-     * @return array[]
+     * @return array<string, array<int, mixed>>
      */
     public static function extractPlaceholdersProvider(): array
     {
@@ -246,9 +246,9 @@ class PlaceholdersBehaviorTest extends TestCase
     /**
      * Test {@see PlaceholdersBehavior::extractPlaceholders()}.
      *
-     * @param array[] $expected Expected result.
-     * @param array $data Entity data.
-     * @param string[] $fields Fields.
+     * @param array<int, array<string, mixed>> $expected Expected result.
+     * @param array<string, mixed> $data Entity data.
+     * @param array<int, string> $fields Fields.
      * @return void
      */
     #[DataProvider('extractPlaceholdersProvider')]

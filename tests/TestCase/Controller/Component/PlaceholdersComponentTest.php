@@ -63,7 +63,7 @@ class PlaceholdersComponentTest extends TestCase
     /**
      * Data provider for {@see PlaceholdersComponentTest::testBeforeFilter()} test case.
      *
-     * @return array[]
+     * @return array<string, array<int, mixed>>
      */
     public static function beforeFilterProvider(): array
     {

@@ -29,6 +29,7 @@ class Plugin extends BasePlugin
     /**
      * {@inheritDoc}
      *
+     * @param \Cake\Core\PluginApplicationInterface<\Cake\Core\ContainerInterface> $app
      * @codeCoverageIgnore
      */
     public function bootstrap(PluginApplicationInterface $app): void

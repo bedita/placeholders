@@ -62,7 +62,7 @@ class PlaceholdersBehavior extends Behavior
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity from which to extract placeholder references.
      * @param array<string> $fields Field names.
-     * @return array<array> A list of arrays, each with `id` and `params` set.
+     * @return array<int, array<string, mixed>> A list of arrays, each with `id` and `params` set.
      */
     public static function extractPlaceholders(EntityInterface $entity, array $fields): array
     {
@@ -106,7 +106,7 @@ class PlaceholdersBehavior extends Behavior
     /**
      * Add associations using placeholder relation.
      *
-     * @param \Cake\Event\Event $event Fired event.
+     * @param \Cake\Event\Event<\Cake\ORM\Table> $event Fired event.
      * @param \Cake\Datasource\EntityInterface $entity Entity.
      * @return void
      */
@@ -141,7 +141,7 @@ class PlaceholdersBehavior extends Behavior
      * Prepare target entities.
      *
      * @param \Cake\ORM\Table $table Target table.
-     * @param array<array> $placeholders Placeholders data.
+     * @param array<int, array<string, mixed>> $placeholders Placeholders data.
      * @return array<\Cake\Datasource\EntityInterface>
      */
     protected function prepareEntities(Table $table, array $placeholders): array
