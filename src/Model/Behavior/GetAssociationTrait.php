@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace BEdita\Placeholders\Model\Behavior;
 
 use Cake\ORM\Association;
+use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 
 /**
@@ -28,7 +29,7 @@ trait GetAssociationTrait
      *
      * @return \Cake\ORM\Table
      */
-    abstract public function table();
+    abstract public function table(): Table;
 
     /**
      * Get association for a relation.

@@ -28,7 +28,7 @@ class PlaceholdersComponent extends Component
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'relations' => ['placeholder', 'placeholded'],
     ];
 
@@ -51,8 +51,8 @@ class PlaceholdersComponent extends Component
                 __d(
                     'placeholders',
                     'Relationships of type {0} can only be managed saving an object',
-                    $request->getParam('relationship')
-                )
+                    $request->getParam('relationship'),
+                ),
             );
         }
     }
