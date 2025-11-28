@@ -15,7 +15,7 @@ class RelationTypesFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
+    public array $records = [
         [
             'relation_id' => 1, // poster / poster_of
             'object_type_id' => 1, // objects

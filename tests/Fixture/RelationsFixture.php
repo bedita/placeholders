@@ -15,7 +15,7 @@ class RelationsFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
+    public array $records = [
         [
             'name' => 'poster',
             'label' => 'Poster',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace BEdita\Placeholders\Test\TestApp\Filesystem\Adapter;
 
 use BEdita\Core\Filesystem\FilesystemAdapter;
+use League\Flysystem\FilesystemAdapter as LeagueFilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 
 /**
@@ -17,7 +18,7 @@ class NullAdapter extends FilesystemAdapter
     /**
      * @inheritDoc
      */
-    protected function buildAdapter(array $config)
+    protected function buildAdapter(array $config): LeagueFilesystemAdapter
     {
         return new InMemoryFilesystemAdapter();
     }

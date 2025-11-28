@@ -21,12 +21,15 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * {@see \BEdita\Placeholders\Controller\Component\PlaceholdersComponent} Test Case
- *
- * @coversDefaultClass \BEdita\Placeholders\Controller\Component\PlaceholdersComponent
  */
+#[CoversClass(PlaceholdersComponent::class)]
+#[CoversMethod(PlaceholdersComponent::class, 'beforeFilter')]
 class PlaceholdersComponentTest extends TestCase
 {
     /**
@@ -43,7 +46,7 @@ class PlaceholdersComponentTest extends TestCase
     {
         parent::setUp();
 
-        $this->controller = new Controller();
+        $this->controller = new Controller(new ServerRequest());
         $this->controller->loadComponent(PlaceholdersComponent::class);
     }
 
@@ -62,7 +65,7 @@ class PlaceholdersComponentTest extends TestCase
      *
      * @return array[]
      */
-    public function beforeFilterProvider(): array
+    public static function beforeFilterProvider(): array
     {
         $request = new ServerRequest();
 
@@ -118,9 +121,8 @@ class PlaceholdersComponentTest extends TestCase
      * @param \Exception|null $expected Expected exception.
      * @param \Cake\Http\ServerRequest $request Request.
      * @return void
-     * @covers ::beforeFilter()
-     * @dataProvider beforeFilterProvider()
      */
+    #[DataProvider('beforeFilterProvider')]
     public function testBeforeFilter(?Exception $expected, ServerRequest $request): void
     {
         if ($expected !== null) {
