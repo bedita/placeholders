@@ -18,11 +18,14 @@ use Cake\Http\ServerRequest;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * {@see \BEdita\Placeholders\Event\BootstrapEventHandler} Test Case
  */
 #[CoversClass(BootstrapEventHandler::class)]
+#[CoversMethod(BootstrapEventHandler::class, 'onControllerInitialize')]
+#[CoversMethod(BootstrapEventHandler::class, 'onModelInitialize')]
 class BootstrapEventHandlerTest extends TestCase
 {
     use LocatorAwareTrait;

@@ -26,6 +26,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -35,6 +36,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
 #[CoversClass(PlaceholdersBehavior::class)]
+#[CoversMethod(PlaceholdersBehavior::class, 'extractPlaceholders')]
+#[CoversMethod(PlaceholdersBehavior::class, 'afterSave')]
+#[CoversMethod(PlaceholdersBehavior::class, 'getAssociation')]
+#[CoversMethod(PlaceholdersBehavior::class, 'prepareEntities')]
 class PlaceholdersBehaviorTest extends TestCase
 {
     use LocatorAwareTrait;
