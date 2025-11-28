@@ -16,7 +16,8 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 class NullAdapter extends FilesystemAdapter
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @param array<string, mixed> $config
      */
     protected function buildAdapter(array $config): LeagueFilesystemAdapter
