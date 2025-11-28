@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\CoversMethod;
  * {@see \BEdita\Placeholders\Event\JsonSchemaEventHandler} Test Case
  */
 #[CoversClass(JsonSchemaEventHandler::class)]
+#[CoversClass(BootstrapEventHandler::class)]
 #[CoversMethod(JsonSchemaEventHandler::class, 'onGetSchema')]
 class JsonSchemaEventHandlerTest extends TestCase
 {

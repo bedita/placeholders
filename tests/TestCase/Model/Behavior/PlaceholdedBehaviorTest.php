@@ -20,6 +20,7 @@ use BEdita\Core\Model\Table\MediaTable;
 use BEdita\Core\Model\Table\ObjectsTable;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
 use BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior;
+use BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior;
 use Cake\Event\EventManager;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
@@ -34,6 +35,8 @@ use PHPUnit\Framework\Attributes\CoversMethod;
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
 #[CoversClass(PlaceholdedBehavior::class)]
+#[CoversClass(BootstrapEventHandler::class)]
+#[CoversClass(PlaceholdersBehavior::class)]
 #[CoversMethod(PlaceholdedBehavior::class, 'beforeSave')]
 #[CoversMethod(PlaceholdedBehavior::class, 'getAssociation')]
 #[CoversMethod(PlaceholdedBehavior::class, 'ensureNotPlaceholded')]

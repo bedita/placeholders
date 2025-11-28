@@ -36,10 +36,12 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
 #[CoversClass(PlaceholdersBehavior::class)]
+#[CoversClass(BootstrapEventHandler::class)]
 #[CoversMethod(PlaceholdersBehavior::class, 'extractPlaceholders')]
 #[CoversMethod(PlaceholdersBehavior::class, 'afterSave')]
 #[CoversMethod(PlaceholdersBehavior::class, 'getAssociation')]
 #[CoversMethod(PlaceholdersBehavior::class, 'prepareEntities')]
+#[CoversMethod(BootstrapEventHandler::class, 'onModelInitialize')]
 class PlaceholdersBehaviorTest extends TestCase
 {
     use LocatorAwareTrait;
@@ -286,7 +288,7 @@ class PlaceholdersBehaviorTest extends TestCase
         ];
 
         // Save with placeholder in body.
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes']);
         $document->body = $body;
         $this->Documents->saveOrFail($document);
 
