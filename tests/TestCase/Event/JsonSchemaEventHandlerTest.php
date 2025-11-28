@@ -10,13 +10,11 @@ use Cake\Event\EventManager;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * {@see \BEdita\Placeholders\Event\JsonSchemaEventHandler} Test Case
  */
 #[CoversClass(JsonSchemaEventHandler::class)]
-#[CoversMethod(JsonSchemaEventHandler::class, 'onGetSchema')]
 class JsonSchemaEventHandlerTest extends TestCase
 {
     use LocatorAwareTrait;

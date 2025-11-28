@@ -22,14 +22,12 @@ use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * {@see \BEdita\Placeholders\Controller\Component\PlaceholdersComponent} Test Case
  */
 #[CoversClass(PlaceholdersComponent::class)]
-#[CoversMethod(PlaceholdersComponent::class, 'beforeFilter')]
 class PlaceholdersComponentTest extends TestCase
 {
     /**
