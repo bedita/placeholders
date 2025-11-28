@@ -17,30 +17,22 @@ use Cake\Routing\Router;
 use Cake\Utility\Security;
 use Migrations\TestSuite\Migrator;
 
-$findRoot = function ($root) {
-    do {
-        $lastRoot = $root;
-        $root = dirname($root);
-        if (is_dir($root . '/vendor/cakephp/cakephp')) {
-            return $root;
-        }
-    } while ($root !== $lastRoot);
-    throw new Exception('Cannot find the root of the application, unable to run tests');
-};
-$root = $findRoot(__FILE__);
-unset($findRoot);
-chdir($root);
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-require_once 'vendor/cakephp/cakephp/src/basics.php';
-require_once 'vendor/autoload.php';
+define('ROOT', dirname(__DIR__));
+define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp');
+define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
+define('CAKE', CORE_PATH . 'src' . DS);
 
-define('ROOT', $root . DS . 'tests' . DS);
-define('APP', ROOT . 'TestApp' . DS);
+require CORE_PATH . 'config' . DS . 'bootstrap.php';
+require CAKE . 'functions.php';
+
+define('APP', ROOT . DS . 'tests' . DS . 'TestApp' . DS);
+
 define('TMP', sys_get_temp_dir() . DS);
 define('LOGS', ROOT . DS . 'logs' . DS);
 define('CONFIG', ROOT . DS . 'config' . DS);
 define('CACHE', TMP . 'cache' . DS);
-define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
 
 Configure::write('debug', true);
 Configure::write('App', [
