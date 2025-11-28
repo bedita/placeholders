@@ -5,5 +5,8 @@ parameters:
     - src
     - tests
   level: 8
-  checkMissingIterableValueType: false
-  checkGenericClassInNonGenericObjectType: false
+  ignoreErrors:
+    - message: '#Return type of call to method Cake\\ORM\\Table(<.*>)?::getBehavior\(\) contains unresolvable type#'
+      path: src/Event/JsonSchemaEventHandler.php
+    - message: '#Return type of call to method Cake\\ORM\\Table(<.*>)?::getBehavior\(\) contains unresolvable type#'
+      path: tests/TestCase/Event/BootstrapEventHandlerTest.php

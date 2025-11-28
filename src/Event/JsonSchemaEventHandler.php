@@ -40,10 +40,10 @@ class JsonSchemaEventHandler implements EventListenerInterface
     /**
      * Modify object type schema by marking fields where placeholders are read from.
      *
-     * @param \Cake\Event\Event $event Dispatched event.
-     * @param array $schema Automatically generated JSON schema.
+     * @param \Cake\Event\Event<\BEdita\Core\Model\Table\ObjectTypesTable> $event Dispatched event.
+     * @param array<string, mixed> $schema Automatically generated JSON schema.
      * @param \BEdita\Core\Model\Entity\ObjectType $objectType Object type.
-     * @return array
+     * @return array<string, mixed>
      */
     public function onGetSchema(Event $event, array $schema, ObjectType $objectType): array
     {
@@ -66,7 +66,8 @@ class JsonSchemaEventHandler implements EventListenerInterface
         // Mark relevant relations as read only.
         $relations = [$behavior->getConfig('relation')];
         if ($table->hasBehavior('Placeholded')) {
-            array_push($relations, ...$table->getBehavior('Placeholded')->getConfig('relations', []));
+            $placeholdedBehavior = $table->getBehavior('Placeholded');
+            array_push($relations, ...$placeholdedBehavior->getConfig('relations', []));
         }
         foreach ($relations as $relName) {
             if (!isset($schema['relations'][$relName])) {

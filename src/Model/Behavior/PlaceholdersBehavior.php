@@ -51,7 +51,7 @@ class PlaceholdersBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'relation' => 'placeholder',
         'fields' => ['description', 'body'],
         'extract' => null,
@@ -61,8 +61,8 @@ class PlaceholdersBehavior extends Behavior
      * Extract placeholders from an entity.
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity from which to extract placeholder references.
-     * @param string[] $fields Field names.
-     * @return array[] A list of arrays, each with `id` and `params` set.
+     * @param array<string> $fields Field names.
+     * @return array<int, array<string, mixed>> A list of arrays, each with `id` and `params` set.
      */
     public static function extractPlaceholders(EntityInterface $entity, array $fields): array
     {
@@ -106,7 +106,7 @@ class PlaceholdersBehavior extends Behavior
     /**
      * Add associations using placeholder relation.
      *
-     * @param \Cake\Event\Event $event Fired event.
+     * @param \Cake\Event\Event<\Cake\ORM\Table> $event Fired event.
      * @param \Cake\Datasource\EntityInterface $entity Entity.
      * @return void
      */
@@ -119,7 +119,7 @@ class PlaceholdersBehavior extends Behavior
             function (bool $isDirty, string $field) use ($entity): bool {
                 return $isDirty || $entity->isDirty($field);
             },
-            false
+            false,
         );
         if ($association === null || $anyDirty === false) {
             // Nothing to do.
@@ -141,8 +141,8 @@ class PlaceholdersBehavior extends Behavior
      * Prepare target entities.
      *
      * @param \Cake\ORM\Table $table Target table.
-     * @param array[] $placeholders Placeholders data.
-     * @return \Cake\Datasource\EntityInterface[]
+     * @param array<int, array<string, mixed>> $placeholders Placeholders data.
+     * @return array<\Cake\Datasource\EntityInterface>
      */
     protected function prepareEntities(Table $table, array $placeholders): array
     {

@@ -5,16 +5,18 @@
     "license": "LGPL-3.0-or-later",
     "require": {
         "php": ">= 8.3",
-        "cakephp/cakephp": "^4.5",
-        "bedita/core": "^5.36.1",
-        "bedita/api": "^5.36.1"
+        "cakephp/cakephp": "^5.0",
+        "bedita/core": "^6.0",
+        "bedita/api": "^6.0"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^4.7.0",
+        "cakephp/cakephp-codesniffer": "^5.0",
         "cakephp/plugin-installer": "^1.3",
-        "phpunit/phpunit": "^9.6",
-        "phpstan/phpstan": "^1.10",
-        "league/flysystem-memory": "^2.0.0"
+        "league/flysystem-memory": "^3.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^1.12",
+        "phpstan/phpstan-deprecation-rules": "^1.2",
+        "phpunit/phpunit": "^11.1"
     },
     "autoload": {
         "psr-4": {
@@ -29,15 +31,16 @@
         }
     },
     "scripts": {
-        "cs-check": "vendor/bin/phpcs",
-        "cs-fix": "vendor/bin/phpcbf",
+        "cs-check": "vendor/bin/phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
+        "cs-fix": "vendor/bin/phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
         "stan": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/phpunit --colors=always"
     },
     "config": {
         "allow-plugins": {
             "cakephp/plugin-installer": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     }
 }

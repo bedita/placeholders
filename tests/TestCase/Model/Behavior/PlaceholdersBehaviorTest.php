@@ -16,6 +16,8 @@ declare(strict_types=1);
 namespace BEdita\Placeholders\Test\TestCase\Model\Behavior;
 
 use BEdita\Core\Model\Action\AddRelatedObjectsAction;
+use BEdita\Core\Model\Table\MediaTable;
+use BEdita\Core\Model\Table\ObjectsTable;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
 use BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior;
 use Cake\Event\EventManager;
@@ -23,14 +25,23 @@ use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * {@see \BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior} Test Case
  *
- * @coversDefaultClass \BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior
  * @property \BEdita\Core\Model\Table\ObjectsTable $Documents
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
+#[CoversClass(PlaceholdersBehavior::class)]
+#[CoversClass(BootstrapEventHandler::class)]
+#[CoversMethod(PlaceholdersBehavior::class, 'extractPlaceholders')]
+#[CoversMethod(PlaceholdersBehavior::class, 'afterSave')]
+#[CoversMethod(PlaceholdersBehavior::class, 'getAssociation')]
+#[CoversMethod(PlaceholdersBehavior::class, 'prepareEntities')]
+#[CoversMethod(BootstrapEventHandler::class, 'onModelInitialize')]
 class PlaceholdersBehaviorTest extends TestCase
 {
     use LocatorAwareTrait;
@@ -38,7 +49,7 @@ class PlaceholdersBehaviorTest extends TestCase
     /**
      * @inheritDoc
      */
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.BEdita/Core.ObjectTypes',
         'plugin.BEdita/Core.PropertyTypes',
         'plugin.BEdita/Core.Properties',
@@ -60,16 +71,16 @@ class PlaceholdersBehaviorTest extends TestCase
     /**
      * ObjectsTable instance
      *
-     * @var \BEdita\Core\Model\Table\ObjectsTable
+     * @var \BEdita\Core\Model\Table\ObjectsTable|null
      */
-    protected $Documents = null;
+    protected ?ObjectsTable $Documents = null;
 
     /**
      * MediaTable instance
      *
-     * @var \BEdita\Core\Model\Table\MediaTable
+     * @var \BEdita\Core\Model\Table\MediaTable|null
      */
-    protected $Media = null;
+    protected ?MediaTable $Media = null;
 
     /**
      * @inheritDoc
@@ -91,9 +102,9 @@ class PlaceholdersBehaviorTest extends TestCase
     /**
      * Data provider for {@see PlaceholdersBehaviorTest::testExtractPlaceholders()} test case.
      *
-     * @return array[]
+     * @return array<string, array<int, mixed>>
      */
-    public function extractPlaceholdersProvider(): array
+    public static function extractPlaceholdersProvider(): array
     {
         return [
             'no configured fields' => [
@@ -237,13 +248,12 @@ class PlaceholdersBehaviorTest extends TestCase
     /**
      * Test {@see PlaceholdersBehavior::extractPlaceholders()}.
      *
-     * @param array[] $expected Expected result.
-     * @param array $data Entity data.
-     * @param string[] $fields Fields.
+     * @param array<int, array<string, mixed>> $expected Expected result.
+     * @param array<string, mixed> $data Entity data.
+     * @param array<int, string> $fields Fields.
      * @return void
-     * @dataProvider extractPlaceholdersProvider()
-     * @covers ::extractPlaceholders()
      */
+    #[DataProvider('extractPlaceholdersProvider')]
     public function testExtractPlaceholders(array $expected, array $data, array $fields = ['description', 'body']): void
     {
         $entity = new Entity($data);
@@ -256,9 +266,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     * @covers ::afterSave()
-     * @covers ::getAssociation()
-     * @covers ::prepareEntities()
      */
     public function testSavePlaceholders(): void
     {
@@ -281,7 +288,7 @@ class PlaceholdersBehaviorTest extends TestCase
         ];
 
         // Save with placeholder in body.
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes']);
         $document->body = $body;
         $this->Documents->saveOrFail($document);
 
@@ -306,9 +313,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     * @covers ::afterSave()
-     * @covers ::getAssociation()
-     * @covers ::prepareEntities()
      */
     public function testSavePlaceholdersReplace(): void
     {
@@ -367,9 +371,6 @@ class PlaceholdersBehaviorTest extends TestCase
      * Test {@see PlaceholdersBehavior::afterSave()}.
      *
      * @return void
-     * @covers ::afterSave()
-     * @covers ::getAssociation()
-     * @covers ::prepareEntities()
      */
     public function testSavePlaceholdersRemove(): void
     {
