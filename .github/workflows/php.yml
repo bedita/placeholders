@@ -5,23 +5,30 @@ on:
     paths:
       - '**/*.php'
       - '.github/workflows/php.yml'
+      - '.scrutinizer.yml'
       - 'composer.json'
+      - 'phpcs.xml.dist'
+      - 'phpstan.neon.dist'
+      - 'phpunit.xml.dist'
   push:
     paths:
       - '**/*.php'
       - '.github/workflows/php.yml'
+      - '.scrutinizer.yml'
       - 'composer.json'
-
+      - 'phpcs.xml.dist'
+      - 'phpstan.neon.dist'
+      - 'phpunit.xml.dist'
 jobs:
   cs:
     uses: bedita/github-workflows/.github/workflows/php-cs.yml@v2
     with:
-      php_versions: '["8.3"]'
+      php_versions: '["8.4"]'
 
   stan:
     uses: bedita/github-workflows/.github/workflows/php-stan.yml@v2
     with:
-      php_versions: '["8.3"]'
+      php_versions: '["8.4"]'
 
   unit:
     name: 'Run unit tests'
@@ -30,11 +37,11 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [8.3]
+        php-version: [8.3, 8.4]
 
     steps:
       - name: 'Checkout current revision'
-        uses: 'actions/checkout@v4'
+        uses: 'actions/checkout@v6'
 
       - name: 'Composer config GH token if available'
         run: 'if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi'
@@ -81,5 +88,5 @@ jobs:
       - name: 'Archive code coverage results'
         uses: 'actions/upload-artifact@v4'
         with:
-          name: 'PHP ${{ matrix.php }}'
+          name: 'PHP ${{ matrix.php-version }}'
           path: 'clover.xml'
