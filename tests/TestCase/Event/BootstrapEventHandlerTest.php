@@ -17,12 +17,15 @@ use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * {@see \BEdita\Placeholders\Event\BootstrapEventHandler} Test Case
- *
- * @coversDefaultClass \BEdita\Placeholders\Event\BootstrapEventHandler
  */
+#[CoversClass(BootstrapEventHandler::class)]
+#[CoversMethod(BootstrapEventHandler::class, 'onControllerInitialize')]
+#[CoversMethod(BootstrapEventHandler::class, 'onModelInitialize')]
 class BootstrapEventHandlerTest extends TestCase
 {
     use LocatorAwareTrait;
@@ -30,7 +33,7 @@ class BootstrapEventHandlerTest extends TestCase
     /**
      * @inheritDoc
      */
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.BEdita/Core.ObjectTypes',
         'plugin.BEdita/Core.PropertyTypes',
         'plugin.BEdita/Core.Properties',
@@ -52,7 +55,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onControllerInitialize()}.
      *
      * @return void
-     * @covers ::onControllerInitialize()
      */
     public function testOnControllerInitialize()
     {
@@ -76,7 +78,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onControllerInitialize()} with a generic resources controller.
      *
      * @return void
-     * @covers ::onControllerInitialize()
      */
     public function testOnControllerInitializeResourcesController()
     {
@@ -99,7 +100,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onModelInitialize()}.
      *
      * @return void
-     * @covers ::onModelInitialize()
      */
     public function testOnModelInitialize()
     {
@@ -115,7 +115,6 @@ class BootstrapEventHandlerTest extends TestCase
      * Test {@see BootstrapEventHandler::onModelInitialize()} with a generic table.
      *
      * @return void
-     * @covers ::onModelInitialize()
      */
     public function testOnModelInitializeOtherTable()
     {

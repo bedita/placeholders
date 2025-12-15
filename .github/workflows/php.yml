@@ -5,23 +5,30 @@ on:
     paths:
       - '**/*.php'
       - '.github/workflows/php.yml'
+      - '.scrutinizer.yml'
       - 'composer.json'
+      - 'phpcs.xml.dist'
+      - 'phpstan.neon.dist'
+      - 'phpunit.xml.dist'
   push:
     paths:
       - '**/*.php'
       - '.github/workflows/php.yml'
+      - '.scrutinizer.yml'
       - 'composer.json'
-
+      - 'phpcs.xml.dist'
+      - 'phpstan.neon.dist'
+      - 'phpunit.xml.dist'
 jobs:
   cs:
     uses: bedita/github-workflows/.github/workflows/php-cs.yml@v2
     with:
-      php_versions: '["8.3"]'
+      php_versions: '["8.4"]'
 
   stan:
     uses: bedita/github-workflows/.github/workflows/php-stan.yml@v2
     with:
-      php_versions: '["8.3"]'
+      php_versions: '["8.4"]'
 
   unit:
     name: 'Run unit tests'
@@ -30,7 +37,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [8.3]
+        php-version: [8.3, 8.4]
 
     steps:
       - name: 'Checkout current revision'
@@ -62,24 +69,24 @@ jobs:
         run: 'composer install --prefer-dist --no-interaction'
 
       - name: 'Run PHPUnit with coverage'
-        run: 'vendor/bin/phpunit --coverage-clover=clover.xml'
+        run: 'vendor/bin/phpunit --coverage-clover=${{ matrix.php-version }}-${{ strategy.job-index }}-clover.xml'
 
       - name: Check test coverage
         id: test-coverage
         uses: johanvanhelden/gha-clover-test-coverage-check@v1
         with:
           percentage: '85'
-          filename: 'clover.xml'
+          filename: '${{ matrix.php-version }}-${{ strategy.job-index }}-clover.xml'
 
       - name: 'Export coverage results'
         uses: 'codecov/codecov-action@v5'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: './clover.xml'
+          files: '${{ matrix.php-version }}-${{ strategy.job-index }}-clover.xml'
           env_vars: PHP_VERSION
 
       - name: 'Archive code coverage results'
         uses: 'actions/upload-artifact@v6'
         with:
-          name: 'PHP ${{ matrix.php }}'
-          path: 'clover.xml'
+          name: 'PHP ${{ matrix.php-version }}'
+          path: '${{ matrix.php-version }}-${{ strategy.job-index }}-clover.xml'

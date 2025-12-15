@@ -35,14 +35,14 @@ class PlaceholdedBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'relations' => ['placeholded'],
     ];
 
     /**
      * Lock entity from being soft-deleted if it is placeholded somewhere.
      *
-     * @param \Cake\Event\Event $event Dispatched event.
+     * @param \Cake\Event\Event<\Cake\ORM\Table> $event Dispatched event.
      * @param \Cake\Datasource\EntityInterface $entity Entity being saved.
      * @return void
      */
@@ -77,7 +77,7 @@ class PlaceholdedBehavior extends Behavior
                 ->select(['existing' => 1])
                 ->where((array)array_combine(
                     array_map([$Table, 'aliasField'], (array)$Table->getPrimaryKey()),
-                    $entity->extract((array)$Table->getPrimaryKey())
+                    $entity->extract((array)$Table->getPrimaryKey()),
                 ))
                 ->innerJoinWith($association->getName())
                 ->count();
@@ -87,7 +87,7 @@ class PlaceholdedBehavior extends Behavior
                     'Cannot delete object {0} because it is still {1} in {2,plural,=1{one object} other{# objects}}',
                     (string)Hash::get($entity, 'id'),
                     $relation,
-                    $refCount
+                    $refCount,
                 ));
             }
         }
