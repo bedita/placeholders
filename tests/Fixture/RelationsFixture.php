@@ -13,9 +13,9 @@ class RelationsFixture extends TestFixture
     /**
      * Records
      *
-     * @var array
+     * @var array<int, array<string, mixed>>
      */
-    public $records = [
+    public array $records = [
         [
             'name' => 'poster',
             'label' => 'Poster',

@@ -3,17 +3,21 @@ declare(strict_types=1);
 
 namespace BEdita\Placeholders\Test\TestCase\Event;
 
+use BEdita\Core\Model\Table\ObjectTypesTable;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
 use BEdita\Placeholders\Event\JsonSchemaEventHandler;
 use Cake\Event\EventManager;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * {@see \BEdita\Placeholders\Event\JsonSchemaEventHandler} Test Case
- *
- * @coversDefaultClass \BEdita\Placeholders\Event\JsonSchemaEventHandler
  */
+#[CoversClass(JsonSchemaEventHandler::class)]
+#[CoversClass(BootstrapEventHandler::class)]
+#[CoversMethod(JsonSchemaEventHandler::class, 'onGetSchema')]
 class JsonSchemaEventHandlerTest extends TestCase
 {
     use LocatorAwareTrait;
@@ -21,7 +25,7 @@ class JsonSchemaEventHandlerTest extends TestCase
     /**
      * @inheritDoc
      */
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.BEdita/Core.ObjectTypes',
         'plugin.BEdita/Core.PropertyTypes',
         'plugin.BEdita/Core.Properties',
@@ -45,7 +49,7 @@ class JsonSchemaEventHandlerTest extends TestCase
      *
      * @var \BEdita\Core\Model\Table\ObjectTypesTable
      */
-    protected $ObjectTypes = null;
+    protected ObjectTypesTable $ObjectTypes;
 
     /**
      * @inheritDoc
@@ -72,7 +76,6 @@ class JsonSchemaEventHandlerTest extends TestCase
      * Test {@see JsonSchemaEventHandler::onGetSchema()}.
      *
      * @return void
-     * @covers ::onGetSchema()
      */
     public function testOnGetSchema(): void
     {
@@ -118,7 +121,6 @@ class JsonSchemaEventHandlerTest extends TestCase
      * Test {@see JsonSchemaEventHandler::onGetSchema()}.
      *
      * @return void
-     * @covers ::onGetSchema()
      */
     public function testOnGetSchemaWithoutPlaceholders(): void
     {

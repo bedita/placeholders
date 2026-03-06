@@ -42,7 +42,7 @@ class BootstrapEventHandler implements EventListenerInterface
     /**
      * Attach placeholders component on BEdita API controllers.
      *
-     * @param \Cake\Event\Event $event Dispatched event.
+     * @param \Cake\Event\Event<\Cake\Controller\Controller> $event Dispatched event.
      * @return void
      */
     public function onControllerInitialize(Event $event): void
@@ -58,7 +58,7 @@ class BootstrapEventHandler implements EventListenerInterface
     /**
      * Attach placeholders behavior on BEdita objects tables.
      *
-     * @param \Cake\Event\Event $event Dispatched event.
+     * @param \Cake\Event\Event<\Cake\ORM\Table> $event Dispatched event.
      * @return void
      */
     public function onModelInitialize(Event $event): void

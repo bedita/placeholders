@@ -16,19 +16,30 @@ declare(strict_types=1);
 namespace BEdita\Placeholders\Test\TestCase\Model\Behavior;
 
 use BEdita\Core\Exception\LockedResourceException;
+use BEdita\Core\Model\Table\MediaTable;
+use BEdita\Core\Model\Table\ObjectsTable;
 use BEdita\Placeholders\Event\BootstrapEventHandler;
+use BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior;
+use BEdita\Placeholders\Model\Behavior\PlaceholdersBehavior;
 use Cake\Event\EventManager;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * {@see \BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior} Test Case
  *
- * @coversDefaultClass \BEdita\Placeholders\Model\Behavior\PlaceholdedBehavior
  * @property \BEdita\Core\Model\Table\ObjectsTable $Documents
  * @property \BEdita\Core\Model\Table\MediaTable $Media
  */
+#[CoversClass(PlaceholdedBehavior::class)]
+#[CoversClass(BootstrapEventHandler::class)]
+#[CoversClass(PlaceholdersBehavior::class)]
+#[CoversMethod(PlaceholdedBehavior::class, 'beforeSave')]
+#[CoversMethod(PlaceholdedBehavior::class, 'getAssociation')]
+#[CoversMethod(PlaceholdedBehavior::class, 'ensureNotPlaceholded')]
 class PlaceholdedBehaviorTest extends TestCase
 {
     use LocatorAwareTrait;
@@ -36,7 +47,7 @@ class PlaceholdedBehaviorTest extends TestCase
     /**
      * @inheritDoc
      */
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.BEdita/Core.ObjectTypes',
         'plugin.BEdita/Core.PropertyTypes',
         'plugin.BEdita/Core.Properties',
@@ -58,16 +69,16 @@ class PlaceholdedBehaviorTest extends TestCase
     /**
      * ObjectsTable instance
      *
-     * @var \BEdita\Core\Model\Table\ObjectsTable
+     * @var \BEdita\Core\Model\Table\ObjectsTable|null
      */
-    protected $Documents = null;
+    protected ?ObjectsTable $Documents = null;
 
     /**
      * MediaTable instance
      *
-     * @var \BEdita\Core\Model\Table\MediaTable
+     * @var \BEdita\Core\Model\Table\MediaTable|null
      */
-    protected $Media = null;
+    protected ?MediaTable $Media = null;
 
     /**
      * @inheritDoc
@@ -90,9 +101,6 @@ class PlaceholdedBehaviorTest extends TestCase
      * Test {@see PlaceholdedBehavior::beforeSave()}.
      *
      * @return void
-     * @covers ::beforeSave()
-     * @covers ::getAssociation()
-     * @covers ::ensureNotPlaceholded()
      */
     public function testBeforeSaveLockedEntity(): void
     {
@@ -118,9 +126,6 @@ class PlaceholdedBehaviorTest extends TestCase
      * Test {@see PlaceholdedBehavior::beforeSave()} with an entity that is not placeholded anywhere.
      *
      * @return void
-     * @covers ::beforeSave()
-     * @covers ::getAssociation()
-     * @covers ::ensureNotPlaceholded()
      */
     public function testBeforeSaveFreeEntity(): void
     {

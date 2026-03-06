@@ -17,6 +17,7 @@ namespace BEdita\Placeholders\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Http\Exception\ForbiddenException;
+use function Cake\I18n\__d;
 
 /**
  * Placeholders component
@@ -28,7 +29,7 @@ class PlaceholdersComponent extends Component
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'relations' => ['placeholder', 'placeholded'],
     ];
 
@@ -51,8 +52,8 @@ class PlaceholdersComponent extends Component
                 __d(
                     'placeholders',
                     'Relationships of type {0} can only be managed saving an object',
-                    $request->getParam('relationship')
-                )
+                    $request->getParam('relationship'),
+                ),
             );
         }
     }
