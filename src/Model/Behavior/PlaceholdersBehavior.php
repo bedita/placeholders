@@ -19,12 +19,12 @@ use BEdita\Core\Model\Action\SetRelatedObjectsAction;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
-use function Cake\I18n\__d;
 use Cake\ORM\Association;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
 use InvalidArgumentException;
 use RuntimeException;
+use function Cake\I18n\__d;
 
 /**
  * Placeholders behavior
