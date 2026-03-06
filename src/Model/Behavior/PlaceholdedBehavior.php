@@ -18,6 +18,7 @@ namespace BEdita\Placeholders\Model\Behavior;
 use BEdita\Core\Exception\LockedResourceException;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use function Cake\I18n\__d;
 use Cake\ORM\Behavior;
 use Cake\Utility\Hash;
 

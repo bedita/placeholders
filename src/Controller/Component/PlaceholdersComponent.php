@@ -17,6 +17,7 @@ namespace BEdita\Placeholders\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Http\Exception\ForbiddenException;
+use function Cake\I18n\__d;
 
 /**
  * Placeholders component
