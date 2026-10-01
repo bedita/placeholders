@@ -24,7 +24,7 @@ use Cake\Event\EventManager;
 /**
  * Plugin for BEdita\Placeholders
  */
-class Plugin extends BasePlugin
+class PlaceholdersPlugin extends BasePlugin
 {
     /**
      * {@inheritDoc}
