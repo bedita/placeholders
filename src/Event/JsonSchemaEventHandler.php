@@ -43,13 +43,13 @@ class JsonSchemaEventHandler implements EventListenerInterface
      * @param \Cake\Event\Event<\BEdita\Core\Model\Table\ObjectTypesTable> $event Dispatched event.
      * @param array<string, mixed> $schema Automatically generated JSON schema.
      * @param \BEdita\Core\Model\Entity\ObjectType $objectType Object type.
-     * @return array<string, mixed>
+     * @return void
      */
-    public function onGetSchema(Event $event, array $schema, ObjectType $objectType): array
+    public function onGetSchema(Event $event, array $schema, ObjectType $objectType): void
     {
         $table = $this->getTableLocator()->get($objectType->table);
         if (!$table->hasBehavior('Placeholders')) {
-            return $schema;
+            return;
         }
 
         $behavior = $table->getBehavior('Placeholders');
@@ -76,6 +76,6 @@ class JsonSchemaEventHandler implements EventListenerInterface
             $schema['relations'][$relName]['readonly'] = true;
         }
 
-        return $schema;
+        $event->setResult($schema);
     }
 }

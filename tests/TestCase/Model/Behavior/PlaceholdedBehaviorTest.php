@@ -69,16 +69,16 @@ class PlaceholdedBehaviorTest extends TestCase
     /**
      * ObjectsTable instance
      *
-     * @var \BEdita\Core\Model\Table\ObjectsTable|null
+     * @var \BEdita\Core\Model\Table\ObjectsTable
      */
-    protected ?ObjectsTable $Documents = null;
+    protected ObjectsTable $Documents;
 
     /**
      * MediaTable instance
      *
-     * @var \BEdita\Core\Model\Table\MediaTable|null
+     * @var \BEdita\Core\Model\Table\MediaTable
      */
-    protected ?MediaTable $Media = null;
+    protected MediaTable $Media;
 
     /**
      * @inheritDoc
@@ -107,17 +107,17 @@ class PlaceholdedBehaviorTest extends TestCase
         $body = '<!-- BE-PLACEHOLDER.10 --><h1>My sweet placeholder</h1>';
 
         // Save with placeholder in body.
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes']);
         $document->body = $body;
         $this->Documents->saveOrFail($document);
 
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes', 'Placeholder']);
         static::assertSame([10], Hash::extract($document->get('placeholder'), '{n}.id'));
 
         // Try to delete media.
         $this->expectException(LockedResourceException::class);
         $this->expectExceptionMessage('Cannot delete object 10 because it is still placeholded in one object');
-        $media = $this->Media->get(10, ['contain' => ['ObjectTypes']]);
+        $media = $this->Media->get(10, contain: ['ObjectTypes']);
         $media->deleted = true;
         $this->Media->saveOrFail($media);
     }
@@ -129,7 +129,7 @@ class PlaceholdedBehaviorTest extends TestCase
      */
     public function testBeforeSaveFreeEntity(): void
     {
-        $media = $this->Media->get(10, ['contain' => ['ObjectTypes']]);
+        $media = $this->Media->get(10, contain: ['ObjectTypes']);
         $media->deleted = true;
         $actual = $this->Media->saveOrFail($media);
 

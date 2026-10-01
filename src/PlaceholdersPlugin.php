@@ -29,7 +29,7 @@ class PlaceholdersPlugin extends BasePlugin
     /**
      * {@inheritDoc}
      *
-     * @param \Cake\Core\PluginApplicationInterface<\Cake\Core\ContainerInterface> $app
+     * @param \Cake\Core\PluginApplicationInterface $app
      * @codeCoverageIgnore
      */
     public function bootstrap(PluginApplicationInterface $app): void
