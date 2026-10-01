@@ -5,3 +5,9 @@ parameters:
     - src
     - tests
   level: 8
+  ignoreErrors:
+    -
+      # Outdated `@method` annotation on BEdita\Core\Model\Table\MediaTable
+      message: '#^Unknown parameter \$contain in call to method BEdita\\Core\\Model\\Table\\MediaTable::get\(\)\.$#'
+      identifier: argument.unknown
+      path: tests

@@ -71,16 +71,16 @@ class PlaceholdersBehaviorTest extends TestCase
     /**
      * ObjectsTable instance
      *
-     * @var \BEdita\Core\Model\Table\ObjectsTable|null
+     * @var \BEdita\Core\Model\Table\ObjectsTable
      */
-    protected ?ObjectsTable $Documents = null;
+    protected ObjectsTable $Documents;
 
     /**
      * MediaTable instance
      *
-     * @var \BEdita\Core\Model\Table\MediaTable|null
+     * @var \BEdita\Core\Model\Table\MediaTable
      */
-    protected ?MediaTable $Media = null;
+    protected MediaTable $Media;
 
     /**
      * @inheritDoc
@@ -293,7 +293,7 @@ class PlaceholdersBehaviorTest extends TestCase
         $this->Documents->saveOrFail($document);
 
         // Reload entity from database, with placeholders.
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes', 'Placeholder']);
         static::assertSame($body, $document->body, 'Entity body has been changed');
         static::assertTrue($document->has('placeholder'));
 
@@ -337,21 +337,21 @@ class PlaceholdersBehaviorTest extends TestCase
         // Save hypothetical previous data.
         $action = new AddRelatedObjectsAction(['association' => $this->Documents->getAssociation('Placeholder')]);
         $action([
-            'entity' => $this->Documents->get(2, ['contain' => ['ObjectTypes']]),
+            'entity' => $this->Documents->get(2, contain: ['ObjectTypes']),
             'relatedEntities' => [
-                $this->Media->get(10, ['contain' => ['ObjectTypes']])->set(['_joinData' => ['params' => ['description' => []]]]),
-                $this->Media->get(14, ['contain' => ['ObjectTypes']]),
+                $this->Media->get(10, contain: ['ObjectTypes'])->patch(['_joinData' => ['params' => ['description' => []]]]),
+                $this->Media->get(14, contain: ['ObjectTypes']),
             ],
         ]);
 
         // Save with placeholder in body.
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes', 'Placeholder']);
         static::assertSame([10, 14], Hash::extract($document->get('placeholder'), '{n}.id')); // Check that previous placeholders exist.
         $document->body = $body;
         $this->Documents->saveOrFail($document);
 
         // Reload entity from database, with placeholders.
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes', 'Placeholder']);
         static::assertSame($body, $document->body, 'Entity body has been changed');
         static::assertTrue($document->has('placeholder'));
 
@@ -379,21 +379,21 @@ class PlaceholdersBehaviorTest extends TestCase
         // Save hypothetical previous data.
         $action = new AddRelatedObjectsAction(['association' => $this->Documents->getAssociation('Placeholder')]);
         $action([
-            'entity' => $this->Documents->get(2, ['contain' => ['ObjectTypes']]),
+            'entity' => $this->Documents->get(2, contain: ['ObjectTypes']),
             'relatedEntities' => [
-                $this->Media->get(10, ['contain' => ['ObjectTypes']])->set(['_joinData' => ['params' => ['description' => []]]]),
-                $this->Media->get(14, ['contain' => ['ObjectTypes']]),
+                $this->Media->get(10, contain: ['ObjectTypes'])->patch(['_joinData' => ['params' => ['description' => []]]]),
+                $this->Media->get(14, contain: ['ObjectTypes']),
             ],
         ]);
 
         // Save with placeholder in body.
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes', 'Placeholder']);
         static::assertSame([10, 14], Hash::extract($document->get('placeholder'), '{n}.id')); // Check that previous placeholders exist.
         $document->body = $body;
         $this->Documents->saveOrFail($document);
 
         // Reload entity from database, with placeholders.
-        $document = $this->Documents->get(2, ['contain' => ['ObjectTypes', 'Placeholder']]);
+        $document = $this->Documents->get(2, contain: ['ObjectTypes', 'Placeholder']);
         static::assertSame($body, $document->body, 'Entity body has been changed');
         static::assertTrue($document->has('placeholder'));
 
