@@ -51,16 +51,6 @@ class PlaceholdersComponentTest extends TestCase
     }
 
     /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        unset($this->controller);
-
-        parent::tearDown();
-    }
-
-    /**
      * Data provider for {@see PlaceholdersComponentTest::testBeforeFilter()} test case.
      *
      * @return array<string, array<int, mixed>>
